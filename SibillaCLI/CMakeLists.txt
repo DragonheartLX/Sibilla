@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.28)
-file(GLOB_RECURSE CLI_SRC LIST_DIRECTORIES false 
+cmake_minimum_required(VERSION 3.25)
+file(GLOB_RECURSE CLI_SRC LIST_DIRECTORIES false
     Source/*.cpp
     Source/**/*.cpp)
 

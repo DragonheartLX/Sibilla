@@ -5,9 +5,7 @@
     #include <conio.h>
 #elif __linux__
     #include <termio.h>
-    #define TTY_PATH            "/dev/tty"
-    #define STTY_US             "stty raw -echo -F"
-    #define STTY_DEF            "stty -raw echo -F"
+    #include <fcntl.h>
 #endif
 
 #include <curl/curl.h>
@@ -24,17 +22,15 @@ int getInputStr(std::string &inputStr)
             inputChar = _getche();
         }
     #elif __linux__
-        fd_set rfds;
-        struct timeval tv;
-        system(STTY_US TTY_PATH);
-        FD_ZERO(&rfds);
-        FD_SET(0, &rfds);
-        tv.tv_sec = 0;
-        tv.tv_usec = 10;
-        if (select(1, &rfds, NULL, NULL, &tv) > 0)
-        {
-            inputChar = getchar();
-        }
+        struct termios newt, oldt;
+        
+        int tty = open("/dev/tty", O_RDONLY);
+        tcgetattr(tty, &oldt);
+        newt = oldt;
+        newt.c_lflag &= ~( ICANON | ECHO );
+        tcsetattr(tty, TCSANOW, &newt);
+        read(tty, &inputChar, 1);
+        tcsetattr(tty, TCSANOW, &oldt);
     #endif
 
     switch (inputChar)
@@ -107,7 +103,11 @@ int main(int argc, char **argv)
         tcgetattr(STDIN_FILENO, &oldt);
         termios newt = oldt;
         newt.c_lflag &= ~(ICANON | ECHO);
+        newt.c_cc[VMIN] = 0;
+        newt.c_cc[VTIME] = 1;
         tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+        setbuf(stdout, NULL);
     #endif
 
     while (running)
@@ -120,13 +120,18 @@ int main(int argc, char **argv)
 
         if (flag == 2)
         {
+            if (input == "quit")
+                running = false;
+            
             std::cout << "\r\x1b[2K" << "Get cmd: " << input << "\n";
             input.clear();
             std::cout << "input: " << input;
         }
 
-        tmp = (tmp + 1) % 100000;
-        if (tmp == 99999) std::cout << "\r\x1b[2KHB\n" << "input: " << input;
+
+        tmp = (tmp + 1) % 100;
+        std::cout << "\r\x1b[2K" << tmp << "\n" << "input: " << input;
+        if (tmp == 0) std::cout << "\r\x1b[2K" << "HB\n" << "input: " << input;
     }
 
     #ifndef _WIN32
