@@ -1,0 +1,20 @@
+{
+  "name": "sibilla",
+  "version-string": "0.0.0dev",
+  "dependencies": [
+    {
+      "name": "curl",
+      "version>=": "8.4.0",
+      "default-features": false,
+      "features": [
+        "openssl",
+        "websockets"
+      ]
+    },
+    {
+      "name": "tomlplusplus",
+      "version>=": "3.3.0"
+    }
+  ],
+  "builtin-baseline": "782ccc18d8b819cdef6794a6c03eb3d9f7cd04aa"
+}

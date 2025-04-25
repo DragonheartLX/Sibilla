@@ -1,0 +1,11 @@
+# Build
+build/
+
+# Visual Studio Code
+# .vscode/
+
+# Sibilla
+Sibilla/
+
+# Clangd
+.cache/

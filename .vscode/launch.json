@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "vsdbg",
+        "type": "cppvsdbg",
+        "request": "launch",
+        "program": "${command:cmake.launchTargetPath}",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${command:cmake.launchTargetDirectory}",
+        "environment": [],
+        "console": "externalTerminal",
+        "internalConsoleOptions": "openOnSessionStart",
+        "logging": {"moduleLoad": false}
+      },
+      {
+        "name": "LLDB",
+        "type": "lldb",
+        "request": "launch",
+        "program": "${command:cmake.launchTargetPath}",
+        "args": [],
+        "stopOnEntry": false,
+        "cwd": "${command:cmake.launchTargetDirectory}",
+        "internalConsoleOptions": "neverOpen",
+        "terminal": "external"
+      },
+    ]
+  }
