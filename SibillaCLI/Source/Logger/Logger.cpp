@@ -81,7 +81,12 @@ namespace scli
         std::chrono::time_point time = std::chrono::system_clock::now();
         std::time_t tt = std::chrono::system_clock::to_time_t(time);
         std::tm ttm;
-        localtime_s(&ttm, &tt);
+
+        #ifdef _WIN32
+            localtime_s(&ttm, &tt);
+        #else
+            localtime_r(&tt, &ttm);
+        #endif
 
         std::string timeStr = fmt::format("[{0:0>2}:{1:0>2}:{2:0>2}]", ttm.tm_hour, ttm.tm_min, ttm.tm_sec);
 
