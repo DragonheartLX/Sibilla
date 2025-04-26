@@ -14,7 +14,11 @@
     {
       "name": "tomlplusplus",
       "version>=": "3.3.0"
+    },
+    {
+      "name": "bshoshany-thread-pool",
+      "version>=": "5.0.0"
     }
   ],
-  "builtin-baseline": "782ccc18d8b819cdef6794a6c03eb3d9f7cd04aa"
+  "builtin-baseline": "6760f636e7bcd0dd034c5c0906f6174009465c29"
 }

@@ -1,142 +1,34 @@
-#include <iostream>
-#include <string>
-
-#if _WIN32
-    #include <conio.h>
-#elif __linux__
-    #include <termio.h>
-    #include <fcntl.h>
-#endif
-
 #include <curl/curl.h>
-#include <csignal>
+#include <atomic>
 
-int getInputStr(std::string &inputStr)
-{
-    int flag = 0;
-    char inputChar = -1;
-
-    #if _WIN32
-        if (_kbhit())
-        {
-            inputChar = _getche();
-        }
-    #elif __linux__
-        struct termios newt, oldt;
-        
-        int tty = open("/dev/tty", O_RDONLY);
-        tcgetattr(tty, &oldt);
-        newt = oldt;
-        newt.c_lflag &= ~( ICANON | ECHO );
-        tcsetattr(tty, TCSANOW, &newt);
-        read(tty, &inputChar, 1);
-        tcsetattr(tty, TCSANOW, &oldt);
-    #endif
-
-    switch (inputChar)
-    {
-    case -1:
-        break;
-    case '\r':
-    case '\n':
-        flag = 2;
-        break;
-    case 127: // DEL
-    case '\b':
-        if (inputStr.size() > 0)
-            inputStr.pop_back();
-        flag = 1;
-        break;
-    default:
-        inputStr.push_back(inputChar);
-        flag = 1;
-        break;
-    }
-
-    return flag;
-}
-
-void signalHandler(int signum)
-{
-
-    /*
-    SIGABRT	程序的异常终止，如调用 abort。
-    SIGFPE	错误的算术运算，比如除以零或导致溢出的操作。
-    SIGILL	检测非法指令。
-    SIGINT	程序终止(interrupt)信号。
-    SIGSEGV	非法访问内存。
-    SIGTERM	发送到程序的终止请求。
-    */
-
-    exit(signum);
-}
+#include "Logger/Logger.h"
+#include "Command/Command.h"
 
 int main(int argc, char **argv)
 {
+    scli::Logger::setLoggerLevel(scli::trace);
 
-    std::signal(SIGINT, signalHandler);
-    std::signal(SIGTERM, signalHandler);
+    scli::Logger::debug("Init libcurl");
+    scli::Logger::debug("libcurl verion: {0}", curl_version());
 
-    // spdlog::set_pattern("%^[%T] [%l]: %v%$");
-    // spdlog::set_level(spdlog::level::level_enum::trace);
+    std::atomic<bool> isRunning(true);
+    std::thread loggerThread([&isRunning]()
+    {
+        scli::Logger::getInstance()->run(isRunning);
+    });
 
-    // spdlog::debug("Init libcurl");
-    // spdlog::debug("libcurl verion: {0}", curl_version());
+    std::thread commandThread([&isRunning]()
+    {
+        scli::Command::getInstance()->run(isRunning);
+    });
+
 
     curl_global_init(CURL_GLOBAL_ALL);
 
-    bool running = true;
-    int tmp = 0;
-
-    std::string input;
-    std::cout << "\r\x1b[2Kinput: " << input;
-
-    #ifdef _WIN32
-        // Windows
-        HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
-        DWORD mode;
-        GetConsoleMode(hStdin, &mode);
-        SetConsoleMode(hStdin, mode & ~(ENABLE_LINE_INPUT));
-    #else
-        // Linux/macOS
-        termios oldt;
-        tcgetattr(STDIN_FILENO, &oldt);
-        termios newt = oldt;
-        newt.c_lflag &= ~(ICANON | ECHO);
-        newt.c_cc[VMIN] = 0;
-        newt.c_cc[VTIME] = 1;
-        tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-
-        setbuf(stdout, NULL);
-    #endif
-
-    while (running)
-    {
-        int flag = getInputStr(input);
-        if(flag != 0)
-        {
-            std::cout << "\r\x1b[2K" << "input: " << input;
-        }
-
-        if (flag == 2)
-        {
-            if (input == "quit")
-                running = false;
-            
-            std::cout << "\r\x1b[2K" << "Get cmd: " << input << "\n";
-            input.clear();
-            std::cout << "input: " << input;
-        }
-
-
-        tmp = (tmp + 1) % 100;
-        std::cout << "\r\x1b[2K" << tmp << "\n" << "input: " << input;
-        if (tmp == 0) std::cout << "\r\x1b[2K" << "HB\n" << "input: " << input;
-    }
-
-    #ifndef _WIN32
-        tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    #endif
+    
+    
+    loggerThread.join();
+    commandThread.join();
 
     curl_global_cleanup();
 
