@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.19)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 
 # MSVC设置: 以utf8编译
 add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")

@@ -18,6 +18,10 @@
     {
       "name": "bshoshany-thread-pool",
       "version>=": "5.0.0"
+    },
+    {
+      "name": "fmt",
+      "version>=": "11.0.2#1"
     }
   ],
   "builtin-baseline": "6760f636e7bcd0dd034c5c0906f6174009465c29"

@@ -83,7 +83,7 @@ namespace scli
         std::tm ttm;
         localtime_s(&ttm, &tt);
 
-        std::string timeStr = std::format("[{0:0>2}:{1:0>2}:{2:0>2}]", ttm.tm_hour, ttm.tm_min, ttm.tm_sec);
+        std::string timeStr = fmt::format("[{0:0>2}:{1:0>2}:{2:0>2}]", ttm.tm_hour, ttm.tm_min, ttm.tm_sec);
 
         switch (level)
         {
@@ -116,7 +116,6 @@ namespace scli
         logStr += "\r\x1b[2K";
         logStr += "\x1b[0mSCLi> ";
 
-        // std::lock_guard<std::mutex> lock(GlobalInstance::getInstance()->consoleMutex);
         logStr += Command::getInstance()->inputCommand;
         m_LogQueue.push(logStr);
     }

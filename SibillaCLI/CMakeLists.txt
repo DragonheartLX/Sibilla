@@ -3,7 +3,7 @@ file(GLOB_RECURSE CLI_SRC LIST_DIRECTORIES false
     Source/*.cpp
     Source/**/*.cpp)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 
 project(SibillaCLI)
 
@@ -13,6 +13,12 @@ target_include_directories(SibillaCLI PRIVATE SibillaCLI)
 
 find_package(CURL REQUIRED)
     target_link_libraries(SibillaCLI PRIVATE CURL::libcurl)
+
+find_package(fmt CONFIG REQUIRED)
+    target_link_libraries(SibillaCLI PRIVATE fmt::fmt)
+
+find_package(tomlplusplus CONFIG REQUIRED)
+    target_link_libraries(SibillaCLI PRIVATE tomlplusplus::tomlplusplus)
 
 install(TARGETS SibillaCLI
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
