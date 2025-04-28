@@ -8,7 +8,6 @@ namespace scli
     public:
         ~GlobalInstance();
 
-        std::mutex consoleMutex;
     private:
         friend class Singleton<GlobalInstance>;
         GlobalInstance();

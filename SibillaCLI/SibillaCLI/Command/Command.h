@@ -8,9 +8,6 @@ namespace scli
     public:
         ~Command();
 
-        void run(bool isRunning);
-        
-        std::string inputCommand;
     private:
 
         friend class Singleton<Command>;

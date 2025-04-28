@@ -1,10 +1,16 @@
-#include "Logger/Logger.h"
-#include "Command/Command.h"
-#include "Utils/GlobalInstance.h"
+#include "Console.h"
 
 #include <ctime>
 #include <chrono>
 #include <BS_thread_pool.hpp>
+
+#ifdef _WIN32
+    #include <Windows.h>
+    #include <conio.h>
+#else
+    #include <termios.h>
+    #include <fcntl.h>
+#endif
 
 BS::synced_stream syncOut;
 
@@ -49,16 +55,105 @@ namespace scli
 
     */
 
-    LoggerLevel Logger::s_Level = LoggerLevel::info;
+    LoggerLevel Console::s_Level = LoggerLevel::info;
 
-    Logger::Logger()
+    Console::Console()
     {
+        m_IsRunning = true;
 
+        m_CommandLine = std::thread([this]()
+        {
+            #ifdef _WIN32
+                // Windows
+                HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
+                DWORD mode;
+                GetConsoleMode(hStdin, &mode);
+                SetConsoleMode(hStdin, mode & ~(ENABLE_LINE_INPUT));
+            #else
+                // Linux/macOS
+                termios oldt;
+                tcgetattr(STDIN_FILENO, &oldt);
+                termios newt = oldt;
+                newt.c_lflag &= ~(ICANON | ECHO);
+                newt.c_cc[VMIN] = 0;
+                newt.c_cc[VTIME] = 1;
+                tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+                setbuf(stdout, NULL);
+            #endif
+
+            while (this->m_IsRunning)
+            {
+                char inputChar = -1;
+
+                #if _WIN32
+                    if (_kbhit())
+                    {
+                        inputChar = _getche();
+                    }
+                #elif __linux__
+                    struct termios newt, oldt;
+                    
+                    int tty = open("/dev/tty", O_RDONLY);
+                    tcgetattr(tty, &oldt);
+                    newt = oldt;
+                    newt.c_lflag &= ~( ICANON | ECHO );
+                    tcsetattr(tty, TCSANOW, &newt);
+                    read(tty, &inputChar, 1);
+                    tcsetattr(tty, TCSANOW, &oldt);
+                #endif
+
+                std::lock_guard<std::mutex> lock(m_ConsoleMutex);
+
+                switch (inputChar)
+                {
+                case -1:
+                    break;
+                case '\r':
+                case '\n':
+                    m_CommandBuffer.clear();
+                    m_LogCommand();
+                    break;
+                case 127: // DEL
+                case '\b':
+                    if (m_CommandBuffer.size() > 0)
+                        m_CommandBuffer.pop_back();
+                        m_LogCommand();
+                    break;
+                default:
+                    m_CommandBuffer.push_back(inputChar);
+                    m_LogCommand();
+                    break;
+                }
+            }
+
+            #ifndef _WIN32
+                tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+            #endif
+        });
+
+        m_Logger = std::thread([this]()
+        {
+            while (this->m_IsRunning)
+        {
+            std::lock_guard<std::mutex> lock(m_ConsoleMutex);
+            if (!m_LogQueue.empty())
+            {
+                syncOut.print(m_LogQueue.front());
+                m_LogQueue.pop();
+            }
+        }
+        });
     }
 
-    Logger::~Logger()
+    Console::~Console()
     {
-        std::lock_guard<std::mutex> lock(GlobalInstance::getInstance()->consoleMutex);
+        m_IsRunning = false;
+
+        m_CommandLine.join();
+        m_Logger.join();
+    
+        std::lock_guard<std::mutex> lock(m_ConsoleMutex);
         while (!m_LogQueue.empty())
         {
             syncOut.print(m_LogQueue.front());
@@ -66,7 +161,7 @@ namespace scli
         }
     }
 
-    void Logger::log(LoggerLevel level, std::string log)
+    void Console::log(LoggerLevel level, std::string log)
     {
         if (level > s_Level)
             return;
@@ -108,12 +203,12 @@ namespace scli
 
         logStr += "\x1b[0mSCLi> ";
 
-        std::lock_guard<std::mutex> lock(GlobalInstance::getInstance()->consoleMutex);
-        logStr += Command::getInstance()->inputCommand;
+        std::lock_guard<std::mutex> lock(m_ConsoleMutex);
+        logStr += m_CommandBuffer;
         m_LogQueue.push(logStr);
     }
 
-    void Logger::logCommand()
+    void Console::m_LogCommand()
     {
         std::string logStr;
 
@@ -121,24 +216,11 @@ namespace scli
         logStr += "\r\x1b[2K";
         logStr += "\x1b[0mSCLi> ";
 
-        logStr += Command::getInstance()->inputCommand;
+        logStr += m_CommandBuffer;
         m_LogQueue.push(logStr);
     }
 
-    void Logger::run(bool isRunning)
-    {
-        while (isRunning)
-        {
-            std::lock_guard<std::mutex> lock(GlobalInstance::getInstance()->consoleMutex);
-            if (!m_LogQueue.empty())
-            {
-                syncOut.print(m_LogQueue.front());
-                m_LogQueue.pop();
-            }
-        }
-    }
-
-    void Logger::setLoggerLevel(LoggerLevel level)
+    void Console::setLoggerLevel(LoggerLevel level)
     {
         s_Level = level;
     }

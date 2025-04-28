@@ -22,6 +22,10 @@
     {
       "name": "fmt",
       "version>=": "11.0.2#1"
+    },
+    {
+      "name": "nlohmann-json",
+      "version>=": "3.12.0"
     }
   ],
   "builtin-baseline": "6760f636e7bcd0dd034c5c0906f6174009465c29"
