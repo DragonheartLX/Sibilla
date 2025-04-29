@@ -27,7 +27,7 @@ namespace scli
         ~Console();
         
         void log(LoggerLevel level, std::string log);
-        static void setLoggerLevel(LoggerLevel level);
+        static void setLoggerLevel();
 
         template<typename T>
         void log(LoggerLevel level, std::string format, T value)

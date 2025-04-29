@@ -5,7 +5,7 @@ build/
 # .vscode/
 
 # Sibilla
-Sibilla/
+SibillaSandBox/Config.toml
 
 # Clangd
 .cache/

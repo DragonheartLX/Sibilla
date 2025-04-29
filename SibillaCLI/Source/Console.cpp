@@ -1,5 +1,5 @@
 #include "Console.h"
-
+#include "Utils/Config.h"
 #include <ctime>
 #include <chrono>
 #include <BS_thread_pool.hpp>
@@ -10,6 +10,7 @@
 #else
     #include <termios.h>
     #include <fcntl.h>
+    #include <clocale>
 #endif
 
 BS::synced_stream syncOut;
@@ -69,6 +70,8 @@ namespace scli
                 DWORD mode;
                 GetConsoleMode(hStdin, &mode);
                 SetConsoleMode(hStdin, mode & ~(ENABLE_LINE_INPUT));
+
+                SetConsoleOutputCP(65001);
             #else
                 // Linux/macOS
                 termios oldt;
@@ -80,6 +83,8 @@ namespace scli
                 tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 
                 setbuf(stdout, NULL);
+
+                std::setlocale(LC_ALL, "en_US.UTF-8")
             #endif
 
             while (this->m_IsRunning)
@@ -220,8 +225,8 @@ namespace scli
         m_LogQueue.push(logStr);
     }
 
-    void Console::setLoggerLevel(LoggerLevel level)
+    void Console::setLoggerLevel()
     {
-        s_Level = level;
+        s_Level = (LoggerLevel)Config::getInstance()->data["dev"]["log_level"].value_or(3);
     }
 }

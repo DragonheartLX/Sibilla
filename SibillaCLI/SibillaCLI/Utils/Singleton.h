@@ -8,6 +8,14 @@ namespace scli
     class Singleton
     {
     public:
+        static bool init()
+        {
+            std::shared_ptr<T> ptr = getInstance();
+            if (ptr == nullptr)
+                return false;
+            return true;
+        };
+
         static std::shared_ptr<T> getInstance()
         {
             static std::once_flag s_Flag;

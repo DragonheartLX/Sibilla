@@ -8,7 +8,7 @@
         "program": "${command:cmake.launchTargetPath}",
         "args": [],
         "stopAtEntry": false,
-        "cwd": "${command:cmake.launchTargetDirectory}",
+        "cwd": "${workspaceRoot}/SibillaSandBox",
         "environment": [],
         "console": "externalTerminal",
         "internalConsoleOptions": "openOnSessionStart",
@@ -21,7 +21,7 @@
         "program": "${command:cmake.launchTargetPath}",
         "args": [],
         "stopOnEntry": false,
-        "cwd": "${command:cmake.launchTargetDirectory}",
+        "cwd": "${workspaceRoot}/SibillaSandBox",
         "internalConsoleOptions": "neverOpen",
         "terminal": "external"
       },
