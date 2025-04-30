@@ -15,5 +15,6 @@ namespace scli
         // virtual void subscribe();
         // virtual void publish();
     private:
+    
     };
 }

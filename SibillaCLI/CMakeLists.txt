@@ -28,6 +28,9 @@ find_package(tomlplusplus CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
     target_link_libraries(SibillaCLI PRIVATE nlohmann_json::nlohmann_json)
 
+find_package(absl CONFIG REQUIRED)
+    target_link_libraries(SibillaCLI PRIVATE absl::base absl::random_random absl::strings)
+
 install(TARGETS SibillaCLI
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
     LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
