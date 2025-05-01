@@ -1,5 +1,5 @@
 #include "Console.h"
-#include "Utils/Config.h"
+// #include "Utils/Config.h"
 
 #include <ctime>
 #include <chrono>
@@ -140,15 +140,16 @@ namespace scli
 
         m_Logger = std::thread([this]()
         {
+            m_LogCommand();
             while (this->m_IsRunning)
-        {
-            std::lock_guard<std::mutex> lock(m_ConsoleMutex);
-            if (!m_LogQueue.empty())
             {
-                syncOut.print(m_LogQueue.front());
-                m_LogQueue.pop();
+                std::lock_guard<std::mutex> lock(m_ConsoleMutex);
+                if (!m_LogQueue.empty())
+                {
+                    syncOut.print(m_LogQueue.front());
+                    m_LogQueue.pop();
+                }
             }
-        }
         });
     }
 
@@ -167,7 +168,7 @@ namespace scli
         }
     }
 
-    void Console::log(LoggerLevel level, std::string log)
+    void Console::log(LoggerLevel level, const std::string& log)
     {
         if (level > s_Level)
             return;
@@ -226,8 +227,8 @@ namespace scli
         m_LogQueue.push(logStr);
     }
 
-    void Console::setLoggerLevel()
+    void Console::setLoggerLevel(LoggerLevel level)
     {
-        s_Level = (LoggerLevel)Config::getInstance()->data["dev"]["log_level"].value_or(3);
+        s_Level = level;
     }
 }

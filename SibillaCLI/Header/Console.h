@@ -26,83 +26,83 @@ namespace scli
     public:
         ~Console();
         
-        void log(LoggerLevel level, std::string log);
-        static void setLoggerLevel();
+        void log(LoggerLevel level, const std::string& log);
+        static void setLoggerLevel(LoggerLevel level = LoggerLevel::info);
 
         template<typename T>
-        void log(LoggerLevel level, std::string format, T value)
+        void log(LoggerLevel level, const std::string& format, T value)
         {
             log(level, fmt::format(format, value));
         };
 
         template<typename T, typename... Args>
-        void log(LoggerLevel level, std::string format, T value, Args&&... args)
+        void log(LoggerLevel level, const std::string& format, T value, Args&&... args)
         {
             log(level, fmt::vformat(format, fmt::make_format_args(value, args...)));
         };
 
         template<typename T, typename... Args>
-        static void fatal(std::string format, T value, Args&&... args)
+        static void fatal(const std::string& format, T value, Args&&... args)
         {
             getInstance()->log(LoggerLevel::fatal, fmt::vformat(format, fmt::make_format_args(value, args...)));
         };
 
-        static void fatal(std::string log)
+        static void fatal(const std::string& log)
         {
             getInstance()->log(LoggerLevel::fatal, log);
         };
 
         template<typename T, typename... Args>
-        static void error(std::string format, T value, Args&&... args)
+        static void error(const std::string& format, T value, Args&&... args)
         {
             getInstance()->log(LoggerLevel::error, fmt::vformat(format, fmt::make_format_args(value, args...)));
         };
 
-        static void error(std::string log)
+        static void error(const std::string& log)
         {
             getInstance()->log(LoggerLevel::error, log);
         };
 
         template<typename T, typename... Args>
-        static void warning(std::string format, T value, Args&&... args)
+        static void warning(const std::string& format, T value, Args&&... args)
         {
             getInstance()->log(LoggerLevel::warning, fmt::vformat(format, fmt::make_format_args(value, args...)));
         };
 
-        static void warning(std::string log)
+        static void warning(const std::string& log)
         {
             getInstance()->log(LoggerLevel::warning, log);
         };
         
         template<typename T, typename... Args>
-        static void info(std::string format, T value, Args&&... args)
+        static void info(const std::string& format, T value, Args&&... args)
         {
             getInstance()->log(LoggerLevel::info, fmt::vformat(format, fmt::make_format_args(value, args...)));
         };
 
-        static void info(std::string log)
+        static void info(const std::string& log)
         {
             getInstance()->log(LoggerLevel::info, log);
         };
 
         template<typename T, typename... Args>
-        static void debug(std::string format, T value, Args&&... args)
+        static void debug(const std::string& format, T value, Args&&... args)
         {
             getInstance()->log(LoggerLevel::debug, fmt::vformat(format, fmt::make_format_args(value, args...)));
         };
 
-        static void debug(std::string log)
+        static void debug(const std::string& log)
         {
             getInstance()->log(LoggerLevel::debug, log);
         };
 
         template<typename T, typename... Args>
-        static void trace(std::string format, T value, Args&&... args)
+        static void trace(const std::string& format, T value, Args&&... args)
         {
             getInstance()->log(LoggerLevel::trace, fmt::vformat(format, fmt::make_format_args(value, args...)));
         };
 
-        static void trace(std::string log)
+        static void trace(const std::string& log)
         {
             getInstance()->log(LoggerLevel::trace, log);
         };

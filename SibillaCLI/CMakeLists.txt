@@ -14,7 +14,7 @@ add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
 add_executable(SibillaCLI ${CLI_SRC})
 
-target_include_directories(SibillaCLI PRIVATE SibillaCLI)
+target_include_directories(SibillaCLI PRIVATE Header)
 
 find_package(CURL REQUIRED)
     target_link_libraries(SibillaCLI PRIVATE CURL::libcurl)
@@ -27,9 +27,6 @@ find_package(tomlplusplus CONFIG REQUIRED)
 
 find_package(nlohmann_json CONFIG REQUIRED)
     target_link_libraries(SibillaCLI PRIVATE nlohmann_json::nlohmann_json)
-
-find_package(absl CONFIG REQUIRED)
-    target_link_libraries(SibillaCLI PRIVATE absl::base absl::random_random absl::strings)
 
 install(TARGETS SibillaCLI
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
