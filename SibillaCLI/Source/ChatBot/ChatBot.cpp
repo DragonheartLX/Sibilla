@@ -18,7 +18,7 @@ namespace scli
 
     ChatBot::~ChatBot()
     {
-        m_CoreThread.join();
+        // m_CoreThread.join();
         delete m_Adapter;
     }
     
@@ -27,7 +27,7 @@ namespace scli
         m_Adapter->run();
     }
 
-    bool ChatBot::msgProcessCallBack(Message* recv, Message* send)
+    bool ChatBot::msgProcessCallBack(MessageRecv* recv, MessageSend* send)
     {
         for (SingleMsg sMsg : recv->msg)
         {
@@ -36,7 +36,11 @@ namespace scli
 
             if (sMsg.data == "测试")
             {
-                
+                send->groupId = recv->groupId;
+                send->userId = recv->senderId;
+                send->type = recv->type;
+                send->msg.push_back(SingleMsg{ SingleMsgType::Text, "测试回复" });
+                return true;
             }
         }
         

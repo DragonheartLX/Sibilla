@@ -1,8 +1,9 @@
 #pragma once
-#include "Message.h"
+#include "Message/MessageRecv.h"
+#include "Message/MessageSend.h"
 #include "ChatBot/Adapter.h"
 
-#include <thread>
+// #include <thread>
 
 namespace scli
 {
@@ -15,10 +16,10 @@ namespace scli
         
         void run();
 
-        bool msgProcessCallBack(Message* recv, Message* send);
+        bool msgProcessCallBack(MessageRecv* recv, MessageSend* send);
     private:
         Adapter* m_Adapter = nullptr;
 
-        std::thread m_CoreThread;
+        // std::thread m_CoreThread;
     };
 }

@@ -21,7 +21,7 @@ namespace scli
         m_SendThread = std::thread(std::bind(&Adapter::send, this));
         m_MsgProcessThread = std::thread([this]()
         {
-            Message* msg = nullptr;
+            MessageRecv* msg = nullptr;
 
             while (isRunning())
             {
@@ -32,7 +32,7 @@ namespace scli
                     m_ReceiveQueue.pop();
                     m_ReceiveMutex.unlock();
 
-                    Message* send = new Message();
+                    MessageSend* send = new MessageSend();
                     if(m_MsgProcessCallBack(msg, send))
                     {
                         m_SendMutex.lock();
@@ -58,23 +58,23 @@ namespace scli
         m_MsgProcessCallBack = cb;
     }
 
-    void Adapter::receiveMsg(Message* msg)
+    void Adapter::receiveMsg(MessageRecv* msg)
     {
-        Message* msgCopy = new Message(msg);
+        MessageRecv* msgCopy = new MessageRecv(msg);
 
         std::lock_guard<std::mutex> lock(m_ReceiveMutex);
         m_ReceiveQueue.push(msgCopy);
     }
 
-    bool Adapter::sendMsg(Message* msg)
+    bool Adapter::sendMsg(MessageSend* msg)
     {
         std::lock_guard<std::mutex> lock(m_SendMutex);
         if (m_SendQueue.empty())
             return false;
 
-        Message* msgData = m_SendQueue.front();
+        MessageSend* msgData = m_SendQueue.front();
         m_SendQueue.pop();
-        msg = msgData;
+        (*msg) = msgData;
 
         delete msgData;
         return true;

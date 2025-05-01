@@ -1,5 +1,5 @@
 #include "Console.h"
-#include "Message.h"
+#include "Message/MessageRecv.h"
 #include "ChatBot/Adapter/OneBot.h"
 
 #include <nlohmann/json.hpp>
@@ -26,12 +26,15 @@ namespace scli
         header = curl_slist_append(header, token.c_str());
         curl_easy_setopt(m_Curl, CURLOPT_HTTPHEADER, header);
 
+        // curl_easy_setopt(m_Curl, CURLOPT_VERBOSE, 1L);
+
         curl_multi_add_handle(m_Curlm, m_Curl);
     }
 
     OneBot::~OneBot()
     {
-
+        curl_easy_cleanup(m_Curl);
+        curl_multi_cleanup(m_Curlm);
     }
 
     void OneBot::receive()
@@ -55,12 +58,107 @@ namespace scli
 
     void OneBot::send()
     {
+        MessageSend msg;
+        while (isRunning())
+        {
+            if (sendMsg(&msg))
+            {
+                nlohmann::json jsonData;
 
+                switch (msg.type)
+                {
+                case MessageType::Group:
+                    jsonData["action"] = "send_group_msg";
+                    jsonData["params"]["group_id"] = msg.groupId;
+                    jsonData["params"]["message"] = nlohmann::json::array();
+                    
+                    for (SingleMsg message: msg.msg)
+                    {
+                        if (message.type == SingleMsgType::Text)
+                        {
+                            jsonData["params"]["message"].push_back(nlohmann::json
+                            { 
+                                { "type", "text"},
+                                { "data", {{ "text", message.data }}}
+                            });
+                        }
+                        
+                        if (message.type == SingleMsgType::Image)
+                        {
+                            jsonData["params"]["message"].push_back(nlohmann::json
+                            { 
+                                { "type", "image"},
+                                { "data", {{ "file", message.data }}}
+                            });
+                        }
+
+                        if (message.type == SingleMsgType::Reply)
+                        {
+                            jsonData["params"]["message"].push_back(nlohmann::json
+                            { 
+                                { "type", "reply"},
+                                { "data", {{ "id", message.data }}}
+                            });
+                        }
+
+                        if (message.type == SingleMsgType::At)
+                        {
+                            jsonData["params"]["message"].push_back(nlohmann::json
+                            { 
+                                { "type", "at"},
+                                { "data", {{ "qq", message.data }}}
+                            });
+                        }
+
+                        if (message.type == SingleMsgType::File)
+                        {
+                            // jsonData["params"]["message"] = nlohmann::json::array();
+                            // jsonData["params"]["message"].push_back(nlohmann::json
+                            // { 
+                            //     { "type", ""},
+                            //     { "data", {{ "", message.data }}}
+                            // });
+                        }
+                    }
+                    break;
+                case MessageType::Private:
+
+                    break;
+                default:
+                    break;
+                }
+
+                size_t offset = 0;
+                CURLcode res = CURLE_OK;
+                std::string data = jsonData.dump();
+                while (!res)
+                {
+                    size_t sent = 0;
+                    res = curl_ws_send
+                    (
+                        m_Curl, 
+                        data.c_str() + offset, 
+                        data.size() - offset, 
+                        &sent, 
+                        0, 
+                        CURLWS_TEXT
+                    );
+
+                    offset += sent;
+
+                    if (res == CURLE_OK && offset == data.size())
+                        break;
+                }
+            }
+        }
     }
 
     void OneBot::msgCallBack()
     {
         nlohmann::json msg = nlohmann::json::parse(m_WSData.msg);
+
+        if (msg.find("time") == msg.end())
+            return;
 
         std::time_t time = msg["time"].get<time_t>();                       // 时间戳
         int64_t self_id = msg["time"].get<int64_t>();                       // 收到事件的机器人 QQ 号
@@ -90,13 +188,14 @@ namespace scli
 
             if (message_type == "group")
             {
-                Message recvMsg;
+                MessageRecv recvMsg;
                 recvMsg.time = msg["time"].get<int64_t>();
                 recvMsg.botId = msg["self_id"].get<int64_t>();
                 recvMsg.type = MessageType::Group;
                 recvMsg.messageId = msg["message_id"].get<int64_t>();
                 recvMsg.senderId = msg["user_id"].get<int64_t>();
                 recvMsg.senderNickname = msg["sender"]["nickname"].get<std::string>();
+                recvMsg.groupId = msg["group_id"].get<int64_t>();
 
                 for (nlohmann::json message: msg["message"])
                 {

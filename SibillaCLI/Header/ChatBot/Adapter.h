@@ -1,5 +1,6 @@
 #pragma once
-#include "Message.h"
+#include "Message/MessageRecv.h"
+#include "Message/MessageSend.h"
 
 #include <queue>
 #include <mutex>
@@ -14,7 +15,7 @@ namespace scli
         Count
     };
 
-    using AdapterCallBack = std::function<bool(Message*, Message*)>;
+    using AdapterCallBack = std::function<bool(MessageRecv*, MessageSend*)>;
 
     class Adapter
     {
@@ -29,8 +30,8 @@ namespace scli
         bool isRunning();
         void bindCallBack(AdapterCallBack cb);
 
-        void receiveMsg(Message* msg);
-        bool sendMsg(Message* msg);
+        void receiveMsg(MessageRecv* msg);
+        bool sendMsg(MessageSend* msg);
 
     private:
         std::atomic<bool> m_Running;
@@ -38,8 +39,8 @@ namespace scli
         std::mutex m_ReceiveMutex;
         std::mutex m_SendMutex;
 
-        std::queue<Message*> m_ReceiveQueue;
-        std::queue<Message*> m_SendQueue;
+        std::queue<MessageRecv*> m_ReceiveQueue;
+        std::queue<MessageSend*> m_SendQueue;
         
         AdapterCallBack m_MsgProcessCallBack;
         
