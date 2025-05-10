@@ -90,7 +90,7 @@ CommentPragmas: "^ NOLINT:"
 # IncludeIsMainSourceRegex: ""
 # IndentCaseLabels: true
 # IndentGotoLabels: true
-# IndentPPDirectives: None
+IndentPPDirectives: BeforeHash
 IndentWidth: 4
 # IndentWrappedFunctionNames: false
 # JavaScriptQuotes: Leave

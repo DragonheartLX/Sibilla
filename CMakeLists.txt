@@ -11,4 +11,5 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY $<1:${CMAKE_BINARY_DIR}/lib>)
 set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install")
 set(SBL_ROOT_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 
+add_subdirectory(SibillaCommon)
 add_subdirectory(SibillaCLI)
