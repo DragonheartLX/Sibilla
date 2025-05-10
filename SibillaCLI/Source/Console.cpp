@@ -3,7 +3,7 @@
 
 #include <ctime>
 #include <chrono>
-#include <print>
+#include <iostream>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -82,7 +82,7 @@ namespace scli
 
 			setbuf(stdout, NULL);
 
-			std::setlocale(LC_ALL, "en_US.UTF-8")
+			std::setlocale(LC_ALL, "en_US.UTF-8");
 #endif
 
 			while (this->m_IsRunning)
@@ -140,7 +140,7 @@ namespace scli
 				std::lock_guard<std::mutex> lock(m_ConsoleMutex);
 				if (!m_LogQueue.empty())
 				{
-					std::print("{0}", m_LogQueue.front());
+					std::cout << m_LogQueue.front();
 					m_LogQueue.pop();
 				}
 			}
@@ -157,7 +157,7 @@ namespace scli
 		std::lock_guard<std::mutex> lock(m_ConsoleMutex);
 		while (!m_LogQueue.empty())
 		{
-			std::print("{0}", m_LogQueue.front());
+			std::cout << m_LogQueue.front();
 			m_LogQueue.pop();
 		}
 	}

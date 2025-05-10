@@ -9,3 +9,6 @@ SibillaSandBox/Config.toml
 
 # Clangd
 .cache/
+
+# vcpkg
+vcpkg/

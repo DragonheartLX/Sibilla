@@ -17,6 +17,7 @@ cd ..
 mkdir build
 cd build
 
+# make sure your compiler support c++23
 cmake .. -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake
 cmake --build .
 ```
