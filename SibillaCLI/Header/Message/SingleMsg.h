@@ -18,4 +18,4 @@ namespace scli
         SingleMsgType type = SingleMsgType::Null;
         std::string data = "";
     };
-}
+} // namespace scli

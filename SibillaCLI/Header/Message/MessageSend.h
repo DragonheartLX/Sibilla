@@ -31,4 +31,4 @@ namespace scli
             msg = other->msg;
         }
     };
-}
+} // namespace scli

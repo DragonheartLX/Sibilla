@@ -8,4 +8,4 @@ namespace scli
         Private,
         Group
     };
-}
+} // namespace scli

@@ -22,10 +22,10 @@ namespace scli
     public:
         Adapter();
         virtual ~Adapter();
-        
+
         virtual void receive() = 0;
         virtual void send() = 0;
-        
+
         void run();
         bool isRunning();
         void bindCallBack(AdapterCallBack cb);
@@ -41,11 +41,11 @@ namespace scli
 
         std::queue<MessageRecv*> m_ReceiveQueue;
         std::queue<MessageSend*> m_SendQueue;
-        
+
         AdapterCallBack m_MsgProcessCallBack;
-        
+
         std::thread m_ReceiveThread;
         std::thread m_SendThread;
         std::thread m_MsgProcessThread;
     };
-}
+} // namespace scli

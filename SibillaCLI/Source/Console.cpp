@@ -6,12 +6,12 @@
 #include <BS_thread_pool.hpp>
 
 #ifdef _WIN32
-    #include <Windows.h>
-    #include <conio.h>
+#include <Windows.h>
+#include <conio.h>
 #else
-    #include <termios.h>
-    #include <fcntl.h>
-    #include <clocale>
+#include <termios.h>
+#include <fcntl.h>
+#include <clocale>
 #endif
 
 BS::synced_stream syncOut;
@@ -63,83 +63,80 @@ namespace scli
     {
         m_IsRunning = true;
 
-        m_CommandLine = std::thread([this]()
-        {
-            #ifdef _WIN32
-                // Windows
-                HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
-                DWORD mode;
-                GetConsoleMode(hStdin, &mode);
-                SetConsoleMode(hStdin, mode & ~(ENABLE_LINE_INPUT));
+        m_CommandLine = std::thread([this]() {
+#ifdef _WIN32
+            // Windows
+            HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
+            DWORD mode;
+            GetConsoleMode(hStdin, &mode);
+            SetConsoleMode(hStdin, mode & ~(ENABLE_LINE_INPUT));
 
-                SetConsoleOutputCP(65001);
-            #else
-                // Linux/macOS
-                termios oldt;
-                tcgetattr(STDIN_FILENO, &oldt);
-                termios newt = oldt;
-                newt.c_lflag &= ~(ICANON | ECHO);
-                newt.c_cc[VMIN] = 0;
-                newt.c_cc[VTIME] = 1;
-                tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+            SetConsoleOutputCP(65001);
+#else
+            // Linux/macOS
+            termios oldt;
+            tcgetattr(STDIN_FILENO, &oldt);
+            termios newt = oldt;
+            newt.c_lflag &= ~(ICANON | ECHO);
+            newt.c_cc[VMIN] = 0;
+            newt.c_cc[VTIME] = 1;
+            tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 
-                setbuf(stdout, NULL);
+            setbuf(stdout, NULL);
 
-                std::setlocale(LC_ALL, "en_US.UTF-8")
-            #endif
+            std::setlocale(LC_ALL, "en_US.UTF-8")
+#endif
 
             while (this->m_IsRunning)
             {
                 char inputChar = -1;
 
-                #if _WIN32
-                    if (_kbhit())
-                    {
-                        inputChar = _getche();
-                    }
-                #elif __linux__
-                    struct termios newt, oldt;
-                    
-                    int tty = open("/dev/tty", O_RDONLY);
-                    tcgetattr(tty, &oldt);
-                    newt = oldt;
-                    newt.c_lflag &= ~( ICANON | ECHO );
-                    tcsetattr(tty, TCSANOW, &newt);
-                    read(tty, &inputChar, 1);
-                    tcsetattr(tty, TCSANOW, &oldt);
-                #endif
+#if _WIN32
+                if (_kbhit())
+                {
+                    inputChar = _getche();
+                }
+#elif __linux__
+                struct termios newt, oldt;
+
+                int tty = open("/dev/tty", O_RDONLY);
+                tcgetattr(tty, &oldt);
+                newt = oldt;
+                newt.c_lflag &= ~(ICANON | ECHO);
+                tcsetattr(tty, TCSANOW, &newt);
+                read(tty, &inputChar, 1);
+                tcsetattr(tty, TCSANOW, &oldt);
+#endif
 
                 std::lock_guard<std::mutex> lock(m_ConsoleMutex);
 
                 switch (inputChar)
                 {
-                case -1:
-                    break;
-                case '\r':
-                case '\n':
-                    m_CommandBuffer.clear();
-                    m_LogCommand();
-                    break;
-                case 127: // DEL
-                case '\b':
-                    if (m_CommandBuffer.size() > 0)
-                        m_CommandBuffer.pop_back();
+                    case -1: break;
+                    case '\r':
+                    case '\n':
+                        m_CommandBuffer.clear();
                         m_LogCommand();
-                    break;
-                default:
-                    m_CommandBuffer.push_back(inputChar);
-                    m_LogCommand();
-                    break;
+                        break;
+                    case 127: // DEL
+                    case '\b':
+                        if (m_CommandBuffer.size() > 0)
+                            m_CommandBuffer.pop_back();
+                        m_LogCommand();
+                        break;
+                    default:
+                        m_CommandBuffer.push_back(inputChar);
+                        m_LogCommand();
+                        break;
                 }
             }
 
-            #ifndef _WIN32
-                tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-            #endif
+#ifndef _WIN32
+            tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+#endif
         });
 
-        m_Logger = std::thread([this]()
-        {
+        m_Logger = std::thread([this]() {
             m_LogCommand();
             while (this->m_IsRunning)
             {
@@ -159,7 +156,7 @@ namespace scli
 
         m_CommandLine.join();
         m_Logger.join();
-    
+
         std::lock_guard<std::mutex> lock(m_ConsoleMutex);
         while (!m_LogQueue.empty())
         {
@@ -170,8 +167,7 @@ namespace scli
 
     void Console::log(LoggerLevel level, const std::string& log)
     {
-        if (level > s_Level)
-            return;
+        if (level > s_Level) return;
 
         std::string logStr;
 
@@ -184,23 +180,42 @@ namespace scli
         std::time_t tt = std::chrono::system_clock::to_time_t(time);
         std::tm ttm;
 
-        #ifdef _WIN32
-            localtime_s(&ttm, &tt);
-        #else
-            localtime_r(&tt, &ttm);
-        #endif
+#ifdef _WIN32
+        localtime_s(&ttm, &tt);
+#else
+        localtime_r(&tt, &ttm);
+#endif
 
-        std::string timeStr = fmt::format("[{0:0>2}:{1:0>2}:{2:0>2}]", ttm.tm_hour, ttm.tm_min, ttm.tm_sec);
+        std::string timeStr = fmt::format("[{0:0>2}:{1:0>2}:{2:0>2}]",
+                                          ttm.tm_hour, ttm.tm_min, ttm.tm_sec);
 
         switch (level)
         {
-        case LoggerLevel::fatal:        logStr = logStr + "\x1b[38;2;255;255;255m\x1b[48;2;255;0;0m" + timeStr + "[fatal]: ";     break;
-        case LoggerLevel::error:        logStr = logStr + "\x1b[38;2;255;0;0m\x1b[48;2;0;0;0m"       + timeStr + "[error]: ";     break;
-        case LoggerLevel::warning:      logStr = logStr + "\x1b[38;2;255;255;0m\x1b[48;2;0;0;0m"     + timeStr + "[warning]: ";   break;
-        case LoggerLevel::info:         logStr = logStr + "\x1b[38;2;0;255;0m\x1b[48;2;0;0;0m"       + timeStr + "[info]: ";      break;
-        case LoggerLevel::debug:        logStr = logStr + "\x1b[38;2;255;255;255m\x1b[48;2;0;0;0m"   + timeStr + "[debug]: ";     break;
-        case LoggerLevel::trace:        logStr = logStr + "\x1b[38;2;192;192;192m\x1b[48;2;0;0;0m"   + timeStr + "[trace]: ";     break;
-        default: return;
+            case LoggerLevel::fatal:
+                logStr = logStr + "\x1b[38;2;255;255;255m\x1b[48;2;255;0;0m" +
+                         timeStr + "[fatal]: ";
+                break;
+            case LoggerLevel::error:
+                logStr = logStr + "\x1b[38;2;255;0;0m\x1b[48;2;0;0;0m" +
+                         timeStr + "[error]: ";
+                break;
+            case LoggerLevel::warning:
+                logStr = logStr + "\x1b[38;2;255;255;0m\x1b[48;2;0;0;0m" +
+                         timeStr + "[warning]: ";
+                break;
+            case LoggerLevel::info:
+                logStr = logStr + "\x1b[38;2;0;255;0m\x1b[48;2;0;0;0m" +
+                         timeStr + "[info]: ";
+                break;
+            case LoggerLevel::debug:
+                logStr = logStr + "\x1b[38;2;255;255;255m\x1b[48;2;0;0;0m" +
+                         timeStr + "[debug]: ";
+                break;
+            case LoggerLevel::trace:
+                logStr = logStr + "\x1b[38;2;192;192;192m\x1b[48;2;0;0;0m" +
+                         timeStr + "[trace]: ";
+                break;
+            default: return;
         }
 
         logStr += "\x1b[1m";
@@ -227,8 +242,5 @@ namespace scli
         m_LogQueue.push(logStr);
     }
 
-    void Console::setLoggerLevel(LoggerLevel level)
-    {
-        s_Level = level;
-    }
-}
+    void Console::setLoggerLevel(LoggerLevel level) { s_Level = level; }
+} // namespace scli

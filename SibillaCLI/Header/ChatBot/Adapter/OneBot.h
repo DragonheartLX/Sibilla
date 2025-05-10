@@ -15,7 +15,7 @@ namespace scli
     //     std::string sub_type;
     // };
 
-    class OneBot:public Adapter
+    class OneBot: public Adapter
     {
     public:
         OneBot();
@@ -25,10 +25,11 @@ namespace scli
         void send() override;
 
         void msgCallBack();
+
     private:
         CURLM* m_Curlm = nullptr;
         CURL* m_Curl = nullptr;
 
         CurlWSStruct m_WSData;
     };
-}
+} // namespace scli

@@ -4,27 +4,25 @@
 
 namespace scli
 {
-    template<typename T>
+    template <typename T>
     class Singleton
     {
     public:
         static bool init()
         {
             std::shared_ptr<T> ptr = getInstance();
-            if (ptr == nullptr)
-                return false;
+            if (ptr == nullptr) return false;
             return true;
         };
 
         static std::shared_ptr<T> getInstance()
         {
             static std::once_flag s_Flag;
-            std::call_once(s_Flag, [&]()
-            {
-                s_Instance = std::shared_ptr<T>(new T);
-            });
+            std::call_once(s_Flag,
+                           [&]() { s_Instance = std::shared_ptr<T>(new T); });
 
-            return s_Instance;;
+            return s_Instance;
+            ;
         };
 
         ~Singleton() = default;
@@ -37,6 +35,6 @@ namespace scli
         static std::shared_ptr<T> s_Instance;
     };
 
-    template<typename T>
+    template <typename T>
     std::shared_ptr<T> Singleton<T>::s_Instance = nullptr;
-}
+} // namespace scli

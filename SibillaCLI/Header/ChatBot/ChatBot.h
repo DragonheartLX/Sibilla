@@ -13,13 +13,14 @@ namespace scli
         ChatBot() = delete;
         ChatBot(AdapterType adapter);
         ~ChatBot();
-        
+
         void run();
 
         bool msgProcessCallBack(MessageRecv* recv, MessageSend* send);
+
     private:
         Adapter* m_Adapter = nullptr;
 
         // std::thread m_CoreThread;
     };
-}
+} // namespace scli

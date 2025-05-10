@@ -6,7 +6,7 @@
 #include <curl/curl.h>
 
 namespace scli
-{   
+{
     struct CurlWSStruct
     {
         CURL* curl = nullptr;
@@ -16,4 +16,4 @@ namespace scli
     };
 
     size_t wsCallback(char* ptr, size_t size, size_t nmemb, void* userdata);
-}
+} // namespace scli
