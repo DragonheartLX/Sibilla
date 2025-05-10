@@ -164,4 +164,4 @@ Standard: c++20
 #   - QT_REQUIRE_VERSION
 TabWidth: 4
 # UseCRLF: false
-# UseTab: Never
+UseTab: Always
