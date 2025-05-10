@@ -6,29 +6,29 @@
 
 namespace scli
 {
-    struct MessageSend
-    {
-        int64_t userId = 0;
-        int64_t groupId = 0;
-        MessageType type = MessageType::Null;
-        std::vector<SingleMsg> msg;
+	struct MessageSend
+	{
+		int64_t userId = 0;
+		int64_t groupId = 0;
+		MessageType type = MessageType::Null;
+		std::vector<SingleMsg> msg;
 
-        MessageSend() = default;
+		MessageSend() = default;
 
-        MessageSend(MessageSend* other)
-        {
-            type = other->type;
-            userId = other->userId;
-            groupId = other->groupId;
-            msg = other->msg;
-        }
+		MessageSend(MessageSend* other)
+		{
+			type = other->type;
+			userId = other->userId;
+			groupId = other->groupId;
+			msg = other->msg;
+		}
 
-        void operator=(MessageSend* other)
-        {
-            type = other->type;
-            userId = other->userId;
-            groupId = other->groupId;
-            msg = other->msg;
-        }
-    };
+		void operator=(MessageSend* other)
+		{
+			type = other->type;
+			userId = other->userId;
+			groupId = other->groupId;
+			msg = other->msg;
+		}
+	};
 } // namespace scli

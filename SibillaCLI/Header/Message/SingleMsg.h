@@ -3,19 +3,19 @@
 
 namespace scli
 {
-    enum class SingleMsgType
-    {
-        Null,
-        Text,
-        Image,
-        Reply,
-        At,
-        File
-    };
+	enum class SingleMsgType
+	{
+		Null,
+		Text,
+		Image,
+		Reply,
+		At,
+		File
+	};
 
-    struct SingleMsg
-    {
-        SingleMsgType type = SingleMsgType::Null;
-        std::string data = "";
-    };
+	struct SingleMsg
+	{
+		SingleMsgType type = SingleMsgType::Null;
+		std::string data = "";
+	};
 } // namespace scli

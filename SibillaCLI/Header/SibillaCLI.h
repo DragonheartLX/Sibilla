@@ -6,18 +6,18 @@
 
 namespace scli
 {
-    class SibillaCLI: public Singleton<SibillaCLI>
-    {
-    public:
-        ~SibillaCLI();
+	class SibillaCLI: public Singleton<SibillaCLI>
+	{
+	public:
+		~SibillaCLI();
 
-        bool run();
+		bool run();
 
-    public:
-        bool m_IsRunning = true;
+	public:
+		bool m_IsRunning = true;
 
-        std::list<ChatBot *> m_Bots;
-        friend class Singleton<SibillaCLI>;
-        SibillaCLI();
-    };
+		std::list<ChatBot *> m_Bots;
+		friend class Singleton<SibillaCLI>;
+		SibillaCLI();
+	};
 } // namespace scli

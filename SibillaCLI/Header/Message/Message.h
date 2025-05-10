@@ -2,10 +2,10 @@
 
 namespace scli
 {
-    enum class MessageType
-    {
-        Null,
-        Private,
-        Group
-    };
+	enum class MessageType
+	{
+		Null,
+		Private,
+		Group
+	};
 } // namespace scli

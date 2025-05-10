@@ -9,43 +9,43 @@
 
 namespace scli
 {
-    enum class AdapterType
-    {
-        OneBot,
-        Count
-    };
+	enum class AdapterType
+	{
+		OneBot,
+		Count
+	};
 
-    using AdapterCallBack = std::function<bool(MessageRecv*, MessageSend*)>;
+	using AdapterCallBack = std::function<bool(MessageRecv*, MessageSend*)>;
 
-    class Adapter
-    {
-    public:
-        Adapter();
-        virtual ~Adapter();
+	class Adapter
+	{
+	public:
+		Adapter();
+		virtual ~Adapter();
 
-        virtual void receive() = 0;
-        virtual void send() = 0;
+		virtual void receive() = 0;
+		virtual void send() = 0;
 
-        void run();
-        bool isRunning();
-        void bindCallBack(AdapterCallBack cb);
+		void run();
+		bool isRunning();
+		void bindCallBack(AdapterCallBack cb);
 
-        void receiveMsg(MessageRecv* msg);
-        bool sendMsg(MessageSend* msg);
+		void receiveMsg(MessageRecv* msg);
+		bool sendMsg(MessageSend* msg);
 
-    private:
-        std::atomic<bool> m_Running;
+	private:
+		std::atomic<bool> m_Running;
 
-        std::mutex m_ReceiveMutex;
-        std::mutex m_SendMutex;
+		std::mutex m_ReceiveMutex;
+		std::mutex m_SendMutex;
 
-        std::queue<MessageRecv*> m_ReceiveQueue;
-        std::queue<MessageSend*> m_SendQueue;
+		std::queue<MessageRecv*> m_ReceiveQueue;
+		std::queue<MessageSend*> m_SendQueue;
 
-        AdapterCallBack m_MsgProcessCallBack;
+		AdapterCallBack m_MsgProcessCallBack;
 
-        std::thread m_ReceiveThread;
-        std::thread m_SendThread;
-        std::thread m_MsgProcessThread;
-    };
+		std::thread m_ReceiveThread;
+		std::thread m_SendThread;
+		std::thread m_MsgProcessThread;
+	};
 } // namespace scli

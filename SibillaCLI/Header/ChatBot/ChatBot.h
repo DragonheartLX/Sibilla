@@ -7,20 +7,20 @@
 
 namespace scli
 {
-    class ChatBot
-    {
-    public:
-        ChatBot() = delete;
-        ChatBot(AdapterType adapter);
-        ~ChatBot();
+	class ChatBot
+	{
+	public:
+		ChatBot() = delete;
+		ChatBot(AdapterType adapter);
+		~ChatBot();
 
-        void run();
+		void run();
 
-        bool msgProcessCallBack(MessageRecv* recv, MessageSend* send);
+		bool msgProcessCallBack(MessageRecv* recv, MessageSend* send);
 
-    private:
-        Adapter* m_Adapter = nullptr;
+	private:
+		Adapter* m_Adapter = nullptr;
 
-        // std::thread m_CoreThread;
-    };
+		// std::thread m_CoreThread;
+	};
 } // namespace scli
