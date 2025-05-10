@@ -6,7 +6,7 @@
 #include <atomic>
 
 #include <string>
-#include <fmt/format.h>
+#include <format>
 #include <queue>
 
 namespace scli
@@ -32,7 +32,7 @@ namespace scli
 		template <typename T>
 		void log(LoggerLevel level, const std::string& format, T value)
 		{
-			log(level, fmt::format(format, value));
+			log(level, std::format(format, value));
 		};
 
 		template <typename T, typename... Args>
@@ -40,7 +40,7 @@ namespace scli
 				 Args&&... args)
 		{
 			log(level,
-				fmt::vformat(format, fmt::make_format_args(value, args...)));
+				std::vformat(format, std::make_format_args(value, args...)));
 		};
 
 		template <typename T, typename... Args>
@@ -48,7 +48,7 @@ namespace scli
 		{
 			getInstance()->log(
 				LoggerLevel::fatal,
-				fmt::vformat(format, fmt::make_format_args(value, args...)));
+				std::vformat(format, std::make_format_args(value, args...)));
 		};
 
 		static void fatal(const std::string& log)
@@ -61,7 +61,7 @@ namespace scli
 		{
 			getInstance()->log(
 				LoggerLevel::error,
-				fmt::vformat(format, fmt::make_format_args(value, args...)));
+				std::vformat(format, std::make_format_args(value, args...)));
 		};
 
 		static void error(const std::string& log)
@@ -74,7 +74,7 @@ namespace scli
 		{
 			getInstance()->log(
 				LoggerLevel::warning,
-				fmt::vformat(format, fmt::make_format_args(value, args...)));
+				std::vformat(format, std::make_format_args(value, args...)));
 		};
 
 		static void warning(const std::string& log)
@@ -87,7 +87,7 @@ namespace scli
 		{
 			getInstance()->log(
 				LoggerLevel::info,
-				fmt::vformat(format, fmt::make_format_args(value, args...)));
+				std::vformat(format, std::make_format_args(value, args...)));
 		};
 
 		static void info(const std::string& log)
@@ -100,7 +100,7 @@ namespace scli
 		{
 			getInstance()->log(
 				LoggerLevel::debug,
-				fmt::vformat(format, fmt::make_format_args(value, args...)));
+				std::vformat(format, std::make_format_args(value, args...)));
 		};
 
 		static void debug(const std::string& log)
@@ -113,7 +113,7 @@ namespace scli
 		{
 			getInstance()->log(
 				LoggerLevel::trace,
-				fmt::vformat(format, fmt::make_format_args(value, args...)));
+				std::vformat(format, std::make_format_args(value, args...)));
 		};
 
 		static void trace(const std::string& log)

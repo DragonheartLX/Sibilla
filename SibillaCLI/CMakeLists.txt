@@ -19,9 +19,6 @@ target_include_directories(SibillaCLI PRIVATE Header)
 find_package(CURL REQUIRED)
     target_link_libraries(SibillaCLI PRIVATE CURL::libcurl)
 
-find_package(fmt CONFIG REQUIRED)
-    target_link_libraries(SibillaCLI PRIVATE fmt::fmt)
-
 find_package(tomlplusplus CONFIG REQUIRED)
     target_link_libraries(SibillaCLI PRIVATE tomlplusplus::tomlplusplus)
 

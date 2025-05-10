@@ -15,14 +15,6 @@
       "version>=": "3.3.0"
     },
     {
-      "name": "bshoshany-thread-pool",
-      "version>=": "5.0.0"
-    },
-    {
-      "name": "fmt",
-      "version>=": "11.0.2#1"
-    },
-    {
       "name": "nlohmann-json",
       "version>=": "3.12.0"
     }

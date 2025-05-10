@@ -3,7 +3,7 @@
 
 #include <ctime>
 #include <chrono>
-#include <BS_thread_pool.hpp>
+#include <print>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -13,8 +13,6 @@
 #include <fcntl.h>
 #include <clocale>
 #endif
-
-BS::synced_stream syncOut;
 
 namespace scli
 {
@@ -61,7 +59,7 @@ namespace scli
 
 	Console::Console()
 	{
-		m_IsRunning = true;
+		m_IsRunning	  = true;
 
 		m_CommandLine = std::thread([this]() {
 #ifdef _WIN32
@@ -76,10 +74,10 @@ namespace scli
 			// Linux/macOS
 			termios oldt;
 			tcgetattr(STDIN_FILENO, &oldt);
-			termios newt = oldt;
-			newt.c_lflag &= ~(ICANON | ECHO);
-			newt.c_cc[VMIN] = 0;
-			newt.c_cc[VTIME] = 1;
+			termios newt	  = oldt;
+			newt.c_lflag	 &= ~(ICANON | ECHO);
+			newt.c_cc[VMIN]	  = 0;
+			newt.c_cc[VTIME]  = 1;
 			tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 
 			setbuf(stdout, NULL);
@@ -101,7 +99,7 @@ namespace scli
 
 				int tty = open("/dev/tty", O_RDONLY);
 				tcgetattr(tty, &oldt);
-				newt = oldt;
+				newt		  = oldt;
 				newt.c_lflag &= ~(ICANON | ECHO);
 				tcsetattr(tty, TCSANOW, &newt);
 				read(tty, &inputChar, 1);
@@ -120,8 +118,7 @@ namespace scli
 						break;
 					case 127: // DEL
 					case '\b':
-						if (m_CommandBuffer.size() > 0)
-							m_CommandBuffer.pop_back();
+						if (m_CommandBuffer.size() > 0) m_CommandBuffer.pop_back();
 						m_LogCommand();
 						break;
 					default:
@@ -143,7 +140,7 @@ namespace scli
 				std::lock_guard<std::mutex> lock(m_ConsoleMutex);
 				if (!m_LogQueue.empty())
 				{
-					syncOut.print(m_LogQueue.front());
+					std::print("{0}", m_LogQueue.front());
 					m_LogQueue.pop();
 				}
 			}
@@ -160,7 +157,7 @@ namespace scli
 		std::lock_guard<std::mutex> lock(m_ConsoleMutex);
 		while (!m_LogQueue.empty())
 		{
-			syncOut.print(m_LogQueue.front());
+			std::print("{0}", m_LogQueue.front());
 			m_LogQueue.pop();
 		}
 	}
@@ -172,12 +169,12 @@ namespace scli
 		std::string logStr;
 
 		logStr.clear();
-		logStr += "\r\x1b[2K";
-		logStr += "\x1b[0m";
+		logStr						 += "\r\x1b[2K";
+		logStr						 += "\x1b[0m";
 
 		// Get time
-		std::chrono::time_point time = std::chrono::system_clock::now();
-		std::time_t tt = std::chrono::system_clock::to_time_t(time);
+		std::chrono::time_point time  = std::chrono::system_clock::now();
+		std::time_t tt				  = std::chrono::system_clock::to_time_t(time);
 		std::tm ttm;
 
 #ifdef _WIN32
@@ -186,35 +183,16 @@ namespace scli
 		localtime_r(&tt, &ttm);
 #endif
 
-		std::string timeStr = fmt::format("[{0:0>2}:{1:0>2}:{2:0>2}]",
-										  ttm.tm_hour, ttm.tm_min, ttm.tm_sec);
+		std::string timeStr = std::format("[{0:0>2}:{1:0>2}:{2:0>2}]", ttm.tm_hour, ttm.tm_min, ttm.tm_sec);
 
 		switch (level)
 		{
-			case LoggerLevel::fatal:
-				logStr = logStr + "\x1b[38;2;255;255;255m\x1b[48;2;255;0;0m" +
-						 timeStr + "[fatal]: ";
-				break;
-			case LoggerLevel::error:
-				logStr = logStr + "\x1b[38;2;255;0;0m\x1b[48;2;0;0;0m" +
-						 timeStr + "[error]: ";
-				break;
-			case LoggerLevel::warning:
-				logStr = logStr + "\x1b[38;2;255;255;0m\x1b[48;2;0;0;0m" +
-						 timeStr + "[warning]: ";
-				break;
-			case LoggerLevel::info:
-				logStr = logStr + "\x1b[38;2;0;255;0m\x1b[48;2;0;0;0m" +
-						 timeStr + "[info]: ";
-				break;
-			case LoggerLevel::debug:
-				logStr = logStr + "\x1b[38;2;255;255;255m\x1b[48;2;0;0;0m" +
-						 timeStr + "[debug]: ";
-				break;
-			case LoggerLevel::trace:
-				logStr = logStr + "\x1b[38;2;192;192;192m\x1b[48;2;0;0;0m" +
-						 timeStr + "[trace]: ";
-				break;
+			case LoggerLevel::fatal: logStr = logStr + "\x1b[38;2;255;255;255m\x1b[48;2;255;0;0m" + timeStr + "[fatal]: "; break;
+			case LoggerLevel::error: logStr = logStr + "\x1b[38;2;255;0;0m\x1b[48;2;0;0;0m" + timeStr + "[error]: "; break;
+			case LoggerLevel::warning: logStr = logStr + "\x1b[38;2;255;255;0m\x1b[48;2;0;0;0m" + timeStr + "[warning]: "; break;
+			case LoggerLevel::info: logStr = logStr + "\x1b[38;2;0;255;0m\x1b[48;2;0;0;0m" + timeStr + "[info]: "; break;
+			case LoggerLevel::debug: logStr = logStr + "\x1b[38;2;255;255;255m\x1b[48;2;0;0;0m" + timeStr + "[debug]: "; break;
+			case LoggerLevel::trace: logStr = logStr + "\x1b[38;2;192;192;192m\x1b[48;2;0;0;0m" + timeStr + "[trace]: "; break;
 			default: return;
 		}
 

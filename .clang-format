@@ -5,7 +5,12 @@ Language: Cpp
 AccessModifierOffset: -4
 # AlignAfterOpenBracket: Align
 # AlignConsecutiveMacros: false
-# AlignConsecutiveAssignments: false
+AlignConsecutiveAssignments:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+  AlignCompound: true
+  PadOperators: true
 # AlignConsecutiveDeclarations: false
 # AlignEscapedNewlines: Left
 # AlignOperands: true
@@ -51,7 +56,7 @@ BreakBeforeBraces: Custom
 # BreakConstructorInitializers: BeforeColon
 # BreakAfterJavaFieldAnnotations: false
 # BreakStringLiterals: true
-# ColumnLimit: 80
+ColumnLimit: 150
 CommentPragmas: "^ NOLINT:"
 # CompactNamespaces: false
 # ConstructorInitializerAllOnOneLineOrOnePerLine: true
