@@ -1,9 +1,8 @@
 #pragma once
 
+#include <Message/MessageRecv.h>
+#include <Message/MessageSend.h>
 #include <SibillaCommon.h>
-
-#include "Message/MessageRecv.h"
-#include "Message/MessageSend.h"
 
 class Liz: public scom::ChatBot
 {

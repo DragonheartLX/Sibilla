@@ -3,8 +3,11 @@
 #include <SibillaCommon.h>
 #include <Utils/Singleton.h>
 
+#include <atomic>
 #include <string>
-#include <utility>
+
+// #include <string>
+// #include <utility>
 
 namespace scli
 {
@@ -13,14 +16,20 @@ namespace scli
 	public:
 		~Console();
 
-		void log(std::string locate, scom::LogInfo* info);
+		void log(scom::LoggerLevel level, const std::string& log, const std::string& location);
 
 	private:
+		void m_CommandBufferUpdate();
+
+		std::atomic<bool> m_IsRunning;
+
 		std::mutex m_ConsoleMutex;
+		std::queue<std::string> m_LogQueue;
+
 		std::thread m_CommandLine;
 		std::thread m_Logger;
 
-		std::queue<std::pair<std::string, scom::LogInfo>> m_LogQueue;
+		std::string m_CommandBuffer;
 
 		friend class scom::Singleton<Console>;
 		Console();

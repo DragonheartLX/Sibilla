@@ -16,14 +16,8 @@ add_executable(SibillaCLI ${CLI_SRC})
 
 target_include_directories(SibillaCLI PRIVATE Header)
 
-find_package(CURL REQUIRED)
-    target_link_libraries(SibillaCLI PRIVATE CURL::libcurl)
-
-find_package(tomlplusplus CONFIG REQUIRED)
-    target_link_libraries(SibillaCLI PRIVATE tomlplusplus::tomlplusplus)
-
-find_package(nlohmann_json CONFIG REQUIRED)
-    target_link_libraries(SibillaCLI PRIVATE nlohmann_json::nlohmann_json)
+find_path(DYLIB_INCLUDE_DIRS "dylib.hpp")
+    target_include_directories(SibillaCLI PRIVATE ${DYLIB_INCLUDE_DIRS})
 
 target_link_libraries(SibillaCLI PRIVATE SibillaCommon)
 

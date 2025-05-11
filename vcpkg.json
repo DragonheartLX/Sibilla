@@ -17,6 +17,10 @@
     {
       "name": "nlohmann-json",
       "version>=": "3.12.0"
+    },
+    {
+      "name": "dylib",
+      "version>=": "2.2.1"
     }
   ],
   "builtin-baseline": "6760f636e7bcd0dd034c5c0906f6174009465c29"

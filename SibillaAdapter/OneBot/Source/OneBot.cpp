@@ -1,7 +1,7 @@
 #include "OneBot.h"
 
+#include <Export.h>
 #include <Logger.h>
-#include <SibillaCommon.h>
 
 scom::Adapter* createAdapter(scom::AdapterInfo* info)
 {

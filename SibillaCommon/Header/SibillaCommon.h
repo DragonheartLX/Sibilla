@@ -5,23 +5,8 @@
 #include <string>
 
 #include "Logger.h"
-#include "Macros.h"
 #include "Message/MessageRecv.h"
 #include "Message/MessageSend.h"
-
-#ifdef SBL_PLATFORM_WINDOWS
-	#ifdef SBL_BUILD_SHARED
-		#ifdef SBL_BUILD_DLL
-			#define SBL_API __declspec(dllexport)
-		#else
-			#define SBL_API __declspec(dllimport)
-		#endif
-	#else
-		#define SBL_API
-	#endif
-#else
-	#define SBL_API
-#endif
 
 namespace scom
 {
@@ -53,7 +38,6 @@ namespace scom
 
 		void bindCallBack(AdapterCallBack cb);
 		bool isRunning();
-		void pullLog(LogInfo* info);
 
 	private:
 		std::atomic<bool> m_Running;
@@ -89,27 +73,5 @@ namespace scom
 		virtual ~ChatBot()													  = default;
 
 		virtual bool msgProcessCallBack(MessageRecv* recv, MessageSend* send) = 0;
-
-		void pullLog(LogInfo* info);
 	};
 } // namespace scom
-
-// Export entry point
-#ifdef SBL_BUILD_SHARED
-	#ifdef __cplusplus
-extern "C"
-{
-	#endif
-
-	#ifdef SBL_ADAPTER_BUILD
-	SBL_API scom::Adapter* createAdapter(scom::AdapterInfo* info);
-	#endif
-
-	#ifdef SBL_CHATBOT_BUILD
-	SBL_API scom::ChatBot* createChatBot(scom::ChatBotInfo* info);
-	#endif
-
-	#ifdef __cplusplus
-}
-	#endif
-#endif

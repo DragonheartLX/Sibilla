@@ -1,8 +1,6 @@
 #pragma once
 
 #include <format>
-#include <mutex>
-#include <queue>
 #include <string>
 
 #include "Utils/Singleton.h"
@@ -19,11 +17,7 @@ namespace scom
 		trace
 	};
 
-	struct LogInfo
-	{
-		LoggerLevel level = LoggerLevel::info;
-		std::string log	  = "";
-	};
+	using LoggerCallBack = void (*)(scom::LoggerLevel, const std::string&, const std::string&);
 
 	class Logger: public Singleton<Logger>
 	{
@@ -31,24 +25,25 @@ namespace scom
 		~Logger() = default;
 
 		void log(LoggerLevel level, const std::string& log);
-		void pull(LogInfo* info);
 
+		static void bind(LoggerCallBack cb);
 		static void setLoggerLevel(LoggerLevel level = LoggerLevel::info);
+		static void setLoggerLocation(const std::string& location);
 
 		template <typename T>
-		void log(LoggerLevel level, const std::string& format, T& value)
+		void log(LoggerLevel level, const std::string& format, const T& value)
 		{
 			log(level, std::format(format, value));
 		};
 
 		template <typename T, typename... Args>
-		void log(LoggerLevel level, const std::string& format, T& value, Args&&... args)
+		void log(LoggerLevel level, const std::string& format, const T& value, Args&&... args)
 		{
 			log(level, std::vformat(format, std::make_format_args(value, args...)));
 		};
 
 		template <typename T, typename... Args>
-		static void fatal(const std::string& format, T& value, Args&&... args)
+		static void fatal(const std::string& format, const T& value, Args&&... args)
 		{
 			getInstance()->log(LoggerLevel::fatal, std::vformat(format, std::make_format_args(value, args...)));
 		};
@@ -56,7 +51,7 @@ namespace scom
 		static void fatal(const std::string& log) { getInstance()->log(LoggerLevel::fatal, log); };
 
 		template <typename T, typename... Args>
-		static void error(const std::string& format, T& value, Args&&... args)
+		static void error(const std::string& format, const T& value, Args&&... args)
 		{
 			getInstance()->log(LoggerLevel::error, std::vformat(format, std::make_format_args(value, args...)));
 		};
@@ -64,7 +59,7 @@ namespace scom
 		static void error(const std::string& log) { getInstance()->log(LoggerLevel::error, log); };
 
 		template <typename T, typename... Args>
-		static void warning(const std::string& format, T& value, Args&&... args)
+		static void warning(const std::string& format, const T& value, Args&&... args)
 		{
 			getInstance()->log(LoggerLevel::warning, std::vformat(format, std::make_format_args(value, args...)));
 		};
@@ -72,7 +67,7 @@ namespace scom
 		static void warning(const std::string& log) { getInstance()->log(LoggerLevel::warning, log); };
 
 		template <typename T, typename... Args>
-		static void info(const std::string& format, T& value, Args&&... args)
+		static void info(const std::string& format, const T& value, Args&&... args)
 		{
 			getInstance()->log(LoggerLevel::info, std::vformat(format, std::make_format_args(value, args...)));
 		};
@@ -80,7 +75,7 @@ namespace scom
 		static void info(const std::string& log) { getInstance()->log(LoggerLevel::info, log); };
 
 		template <typename T, typename... Args>
-		static void debug(const std::string& format, T& value, Args&&... args)
+		static void debug(const std::string& format, const T& value, Args&&... args)
 		{
 			getInstance()->log(LoggerLevel::debug, std::vformat(format, std::make_format_args(value, args...)));
 		};
@@ -88,7 +83,7 @@ namespace scom
 		static void debug(const std::string& log) { getInstance()->log(LoggerLevel::debug, log); };
 
 		template <typename T, typename... Args>
-		static void trace(const std::string& format, T& value, Args&&... args)
+		static void trace(const std::string& format, const T& value, Args&&... args)
 		{
 			getInstance()->log(LoggerLevel::trace, std::vformat(format, std::make_format_args(value, args...)));
 		};
@@ -97,9 +92,8 @@ namespace scom
 
 	private:
 		static LoggerLevel s_Level;
-
-		std::mutex m_LoggerMutex;
-		std::queue<LogInfo> m_LoggerQueue;
+		static LoggerCallBack s_LogCallBack;
+		static std::string s_Location;
 
 		friend class Singleton<Logger>;
 		Logger() = default;

@@ -35,8 +35,21 @@
 	#error "Android is not supported!"
 #elif defined(__linux__)
 	#define SBL_PLATFORM_LINUX
-	#error "Linux is not supported!"
 #else
 	/* Unknown compiler/platform */
 	#error "Unknown platform!"
 #endif // End of platform detection
+
+#ifdef SBL_PLATFORM_WINDOWS
+	#ifdef SBL_BUILD_SHARED
+		#ifdef SBL_BUILD_DLL
+			#define SBL_API __declspec(dllexport)
+		#else
+			#define SBL_API __declspec(dllimport)
+		#endif
+	#else
+		#define SBL_API
+	#endif
+#else
+	#define SBL_API
+#endif

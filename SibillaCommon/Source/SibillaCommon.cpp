@@ -72,16 +72,4 @@ namespace scom
 	void Adapter::bindCallBack(AdapterCallBack cb) { m_MsgProcessCallBack = cb; }
 
 	bool Adapter::isRunning() { return m_Running; }
-
-	void Adapter::pullLog(LogInfo* info)
-	{
-		std::shared_ptr<Logger> log = Logger::getInstance();
-		log->pull(info);
-	}
-
-	void ChatBot::pullLog(LogInfo* info)
-	{
-		std::shared_ptr<Logger> log = Logger::getInstance();
-		log->pull(info);
-	}
 } // namespace scom

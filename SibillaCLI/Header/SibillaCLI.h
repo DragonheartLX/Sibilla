@@ -3,11 +3,19 @@
 #include <SibillaCommon.h>
 #include <Utils/Singleton.h>
 
-#include <map>
-#include <string>
+#include <vector>
 
 namespace scli
 {
+	struct Instance
+	{
+		scom::AdapterInfo adapterInfo = {};
+		scom::ChatBotInfo chatBotInfo = {};
+
+		scom::Adapter *adapter		  = nullptr;
+		scom::ChatBot *chatBot		  = nullptr;
+	};
+
 	class SibillaCLI
 	{
 	public:
@@ -19,7 +27,6 @@ namespace scli
 	private:
 		bool m_IsRunning = false;
 
-		std::map<std::string, scom::Adapter *> m_Adapters;
-		std::map<std::string, scom::ChatBot *> m_Bots;
+		std::vector<Instance> m_Instances;
 	};
 } // namespace scli

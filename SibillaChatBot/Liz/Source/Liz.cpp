@@ -1,5 +1,6 @@
 #include "Liz.h"
 
+#include <Export.h>
 #include <SibillaCommon.h>
 
 scom::ChatBot* createChatBot(scom::ChatBotInfo* info)
