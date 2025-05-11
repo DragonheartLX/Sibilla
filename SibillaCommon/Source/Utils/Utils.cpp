@@ -1,4 +1,5 @@
 #include "Utils/Utils.h"
+
 #include <random>
 
 static std::random_device s_RandomDevice;

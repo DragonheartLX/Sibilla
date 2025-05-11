@@ -1,22 +1,28 @@
 cmake_minimum_required(VERSION 3.19)
-file(GLOB_RECURSE COM_SRC LIST_DIRECTORIES false
+file(GLOB_RECURSE ADA_SRC LIST_DIRECTORIES false
     Source/*.cpp
     Source/**/*.cpp)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(SibillaCommon)
+project(OneBotAdapter)
 
 # MSVC设置: 以utf8编译
 add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
-add_library(SibillaCommon STATIC ${COM_SRC})
+add_compile_definitions(SBL_BUILD_SHARED)
+add_compile_definitions(SBL_BUILD_DLL)
+add_compile_definitions(SBL_ADAPTER_BUILD)
 
-target_include_directories(SibillaCommon PUBLIC Header)
+add_library(OneBotAdapter SHARED ${ADA_SRC})
 
-install(TARGETS SibillaCommon
+target_include_directories(OneBotAdapter PRIVATE Header)
+
+target_link_libraries(OneBotAdapter PRIVATE SibillaCommon)
+
+install(TARGETS OneBotAdapter
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
     LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
     ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
