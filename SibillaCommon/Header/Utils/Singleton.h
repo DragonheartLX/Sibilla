@@ -2,7 +2,7 @@
 #include <memory>
 #include <mutex>
 
-namespace scli
+namespace scom
 {
 	template <typename T>
 	class Singleton
@@ -35,4 +35,4 @@ namespace scli
 
 	template <typename T>
 	std::shared_ptr<T> Singleton<T>::s_Instance = nullptr;
-} // namespace scli
+} // namespace scom

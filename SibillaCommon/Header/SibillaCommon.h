@@ -4,6 +4,7 @@
 #include <queue>
 #include <string>
 
+#include "Logger.h"
 #include "Macros.h"
 #include "Message/MessageRecv.h"
 #include "Message/MessageSend.h"
@@ -52,6 +53,7 @@ namespace scom
 
 		void bindCallBack(AdapterCallBack cb);
 		bool isRunning();
+		void pullLog(LogInfo* info);
 
 	private:
 		std::atomic<bool> m_Running;
@@ -86,6 +88,8 @@ namespace scom
 		virtual ~ChatBot()													  = default;
 
 		virtual bool msgProcessCallBack(MessageRecv* recv, MessageSend* send) = 0;
+
+		void pullLog(LogInfo* info);
 	};
 } // namespace scom
 

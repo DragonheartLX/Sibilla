@@ -1,5 +1,6 @@
 #include "OneBot.h"
 
+#include <Logger.h>
 #include <SibillaCommon.h>
 
 scom::Adapter* createAdapter(scom::AdapterInfo* info)
@@ -9,7 +10,7 @@ scom::Adapter* createAdapter(scom::AdapterInfo* info)
 	return new OneBot;
 };
 
-OneBot::OneBot() {}
+OneBot::OneBot() { scom::Logger::info("OneBot v11 init."); }
 
 OneBot::~OneBot() {}
 
