@@ -79,6 +79,7 @@ namespace scom
 	{
 		std::string name	= "";
 		std::string version = "";
+		std::string adapter = "";
 	};
 
 	class ChatBot
@@ -94,20 +95,21 @@ namespace scom
 } // namespace scom
 
 // Export entry point
-
-#ifdef __cplusplus
+#ifdef SBL_BUILD_SHARED
+	#ifdef __cplusplus
 extern "C"
 {
-#endif
+	#endif
 
-#ifdef SBL_ADAPTER_BUILD
+	#ifdef SBL_ADAPTER_BUILD
 	SBL_API scom::Adapter* createAdapter(scom::AdapterInfo* info);
-#endif
+	#endif
 
-#ifdef SBL_CHATBOT_BUILD
+	#ifdef SBL_CHATBOT_BUILD
 	SBL_API scom::ChatBot* createChatBot(scom::ChatBotInfo* info);
-#endif
+	#endif
 
-#ifdef __cplusplus
+	#ifdef __cplusplus
 }
+	#endif
 #endif

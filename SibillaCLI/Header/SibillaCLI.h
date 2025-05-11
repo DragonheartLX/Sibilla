@@ -1,23 +1,25 @@
 #pragma once
-#include "Utils/Singleton.h"
-#include "ChatBot/ChatBot.h"
 
-#include <list>
+#include <SibillaCommon.h>
+#include <Utils/Singleton.h>
+
+#include <map>
+#include <string>
 
 namespace scli
 {
-	class SibillaCLI: public Singleton<SibillaCLI>
+	class SibillaCLI
 	{
 	public:
+		SibillaCLI();
 		~SibillaCLI();
 
 		bool run();
 
-	public:
-		bool m_IsRunning = true;
+	private:
+		bool m_IsRunning = false;
 
-		std::list<ChatBot *> m_Bots;
-		friend class Singleton<SibillaCLI>;
-		SibillaCLI();
+		std::map<std::string, scom::Adapter *> m_Adapters;
+		std::map<std::string, scom::ChatBot *> m_Bots;
 	};
 } // namespace scli
