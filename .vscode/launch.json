@@ -1,29 +1,31 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "name": "vsdbg",
-        "type": "cppvsdbg",
-        "request": "launch",
-        "program": "${command:cmake.launchTargetPath}",
-        "args": [],
-        "stopAtEntry": false,
-        "cwd": "${workspaceRoot}/SibillaSandBox",
-        "environment": [],
-        "console": "externalTerminal",
-        "internalConsoleOptions": "openOnSessionStart",
-        "logging": {"moduleLoad": false}
-      },
-      {
-        "name": "LLDB",
-        "type": "lldb",
-        "request": "launch",
-        "program": "${command:cmake.launchTargetPath}",
-        "args": [],
-        "stopOnEntry": false,
-        "cwd": "${workspaceRoot}/SibillaSandBox",
-        "internalConsoleOptions": "neverOpen",
-        "terminal": "external"
-      },
-    ]
-  }
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "vsdbg",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${command:cmake.launchTargetPath}",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceRoot}/SibillaSandBox",
+      "environment": [],
+      "console": "externalTerminal",
+      "internalConsoleOptions": "openOnSessionStart",
+      "logging": {
+        "moduleLoad": false
+      }
+    },
+    {
+      "name": "LLDB",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${command:cmake.launchTargetPath}",
+      "args": [],
+      "stopOnEntry": false,
+      "cwd": "${workspaceRoot}/SibillaSandBox",
+      "internalConsoleOptions": "neverOpen",
+      "terminal": "external"
+    },
+  ]
+}

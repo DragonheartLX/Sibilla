@@ -24,6 +24,10 @@
 
 namespace scom
 {
+	// ==========
+	// Adapter
+	// ==========
+
 	struct AdapterInfo
 	{
 		std::string name	= "";
@@ -64,6 +68,25 @@ namespace scom
 		std::thread m_SendThread;
 		std::thread m_MsgProcessThread;
 	};
+
+	// ==========
+	// ChatBot
+	// ==========
+
+	struct ChatBotInfo
+	{
+		std::string name	= "";
+		std::string version = "";
+	};
+
+	class ChatBot
+	{
+	public:
+		ChatBot()															  = default;
+		virtual ~ChatBot()													  = default;
+
+		virtual bool msgProcessCallBack(MessageRecv* recv, MessageSend* send) = 0;
+	};
 } // namespace scom
 
 // Export entry point
@@ -78,7 +101,7 @@ extern "C"
 #endif
 
 #ifdef SBL_CHATBOT_BUILD
-	SBL_API scom::ChatBot* createChatBot();
+	SBL_API scom::ChatBot* createChatBot(scom::ChatBotInfo* info);
 #endif
 
 #ifdef __cplusplus

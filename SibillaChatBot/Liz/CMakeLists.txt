@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.19)
-file(GLOB_RECURSE ADA_SRC LIST_DIRECTORIES false
+file(GLOB_RECURSE BOT_SRC LIST_DIRECTORIES false
     Source/*.cpp
     Source/**/*.cpp)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(OneBotAdapter)
+project(LizBot)
 
 # MSVC设置: 以utf8编译
 add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
@@ -14,16 +14,16 @@ add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
 add_compile_definitions(SBL_BUILD_SHARED)
 add_compile_definitions(SBL_BUILD_DLL)
-add_compile_definitions(SBL_ADAPTER_BUILD)
+add_compile_definitions(SBL_CHATBOT_BUILD)
 
-add_library(OneBotAdapter SHARED ${ADA_SRC})
+add_library(LizBot SHARED ${BOT_SRC})
 
-target_include_directories(OneBotAdapter PRIVATE Header)
+target_include_directories(LizBot PRIVATE Header)
 
-target_link_libraries(OneBotAdapter PRIVATE SibillaCommon)
+target_link_libraries(LizBot PRIVATE SibillaCommon)
 
-install(TARGETS OneBotAdapter
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/Adapter
+install(TARGETS LizBot
+    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/Bot
     LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
     ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
 )

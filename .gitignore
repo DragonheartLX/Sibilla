@@ -5,7 +5,8 @@ build/
 # .vscode/
 
 # Sibilla
-SibillaSandBox/Config.toml
+SibillaSandBox/*
+!SibillaSandBox/ConfigTemplate.toml
 
 # Clangd
 .cache/

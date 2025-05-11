@@ -9,6 +9,10 @@ scom::Adapter* createAdapter(scom::AdapterInfo* info)
 	return new OneBot;
 };
 
+OneBot::OneBot() {}
+
+OneBot::~OneBot() {}
+
 void OneBot::receive() {}
 
 void OneBot::send() {}
