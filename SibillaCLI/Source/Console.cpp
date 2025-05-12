@@ -79,8 +79,9 @@ namespace scli
 #ifdef SBL_PLATFORM_WINDOWS
 			// Windows
 			HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
-			DWORD mode;
+			DWORD mode	  = 0;
 			GetConsoleMode(hStdin, &mode);
+			mode |= ENABLE_VIRTUAL_TERMINAL_INPUT;
 			SetConsoleMode(hStdin, mode & ~(ENABLE_LINE_INPUT));
 
 			SetConsoleCP(65001);
@@ -107,7 +108,7 @@ namespace scli
 #ifdef SBL_PLATFORM_WINDOWS
 				if (_kbhit())
 				{
-					inputChar = _getche();
+					inputChar = _getch();
 				}
 #elif SBL_PLATFORM_LINUX
 				struct termios newt, oldt;

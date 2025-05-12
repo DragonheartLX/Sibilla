@@ -3,8 +3,8 @@
 #include <mutex>
 #include <queue>
 #include <string>
+#include <thread>
 
-#include "Logger.h"
 #include "Message/MessageRecv.h"
 #include "Message/MessageSend.h"
 
