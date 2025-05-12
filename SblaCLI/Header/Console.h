@@ -5,6 +5,7 @@
 #include <atomic>
 #include <queue>
 #include <string>
+#include <thread>
 
 namespace sbla
 {

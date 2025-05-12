@@ -5,7 +5,7 @@
 	/* Windows x64/x86 */
 	#ifdef _WIN64
 		/* Windows x64  */
-		#define SBL_PLATFORM_WINDOWS
+		#define SBL_PLATFORM_WINDOWS 1
 	#else
 		/* Windows x86 */
 		#error "x86 Builds are not supported!"
@@ -19,10 +19,10 @@
 	#if TARGET_IPHONE_SIMULATOR == 1
 		#error "IOS simulator is not supported!"
 	#elif TARGET_OS_IPHONE == 1
-		#define SBL_PLATFORM_IOS
+		#define SBL_PLATFORM_IOS 1
 		#error "IOS is not supported!"
 	#elif TARGET_OS_MAC == 1
-		#define SBL_PLATFORM_MACOS
+		#define SBL_PLATFORM_MACOS 1
 		#error "MacOS is not supported!"
 	#else
 		#error "Unknown Apple platform!"
@@ -31,10 +31,10 @@
  * since android is based on the linux kernel
  * it has __linux__ defined */
 #elif defined(__ANDROID__)
-	#define SBL_PLATFORM_ANDROID
+	#define SBL_PLATFORM_ANDROID 1
 	#error "Android is not supported!"
 #elif defined(__linux__)
-	#define SBL_PLATFORM_LINUX
+	#define SBL_PLATFORM_LINUX 1
 #else
 	/* Unknown compiler/platform */
 	#error "Unknown platform!"

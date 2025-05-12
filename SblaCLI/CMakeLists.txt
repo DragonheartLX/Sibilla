@@ -6,6 +6,8 @@ file(GLOB_RECURSE CLI_SRC LIST_DIRECTORIES false
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+find_package(Threads REQUIRED)
+
 project(SibillaCLI)
 
 # MSVC设置: 以utf8编译
@@ -17,6 +19,7 @@ add_executable(SblaCLI ${CLI_SRC})
 target_include_directories(SblaCLI PRIVATE Header)
 
 target_link_libraries(SblaCLI PRIVATE SblaCore)
+target_link_libraries(SblaCLI PRIVATE Threads::Threads)
 
 find_path(DYLIB_INCLUDE_DIRS "dylib.hpp")
     target_include_directories(SblaCLI PRIVATE ${DYLIB_INCLUDE_DIRS})

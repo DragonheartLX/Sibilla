@@ -3,6 +3,7 @@
 #include <functional>
 #include <mutex>
 #include <queue>
+#include <thread>
 
 #include "SblaCore/Message/MessageRecv.h"
 #include "SblaCore/Message/MessageSend.h"
