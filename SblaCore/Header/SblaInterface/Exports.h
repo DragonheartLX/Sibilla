@@ -1,4 +1,5 @@
 #pragma once
+
 #include "SblaCore/Macros.h"
 #include "SblaInterface/IAdapter.h"
 #include "SblaInterface/IChatBot.h"
@@ -19,7 +20,7 @@ struct ChatBotInfo
 
 struct InitInfo
 {
-	sbla::ILogger* log		= nullptr;
+	sbla::ILogger* logger	= nullptr;
 	sbla::IAdapter* adapter = nullptr;
 	sbla::IChatBot* chatBot = nullptr;
 	AdapterInfo adapterInfo = {};
@@ -45,7 +46,7 @@ extern "C"
 
 	SBL_API void init(InitInfo* info)
 	{
-		logger = info->log;
+		logger = info->logger;
 	#ifdef SBL_ADAPTER_BUILD
 		info->adapter = initAdapter(&info->adapterInfo);
 	#endif

@@ -4,11 +4,11 @@
 #include <SblaInterface/ILogger.h>
 
 #include <chrono>
-#include <cstdio>
 #include <format>
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <thread>
 
 #ifdef SBL_PLATFORM_WINDOWS
 	#include <Windows.h>
@@ -76,96 +76,36 @@ static const char BLACK_BG[]	= "\x1b[48;2;0;0;0m";
 
 namespace sbla
 {
+	char getInputChar()
+	{
+		char inputChar = -1;
+
+#ifdef SBL_PLATFORM_WINDOWS
+		if (_kbhit())
+		{
+			inputChar = _getch();
+		}
+#elif SBL_PLATFORM_LINUX
+		struct termios newt, oldt;
+
+		int tty = open("/dev/tty", O_RDONLY);
+		tcgetattr(tty, &oldt);
+		newt		  = oldt;
+		newt.c_lflag &= ~(ICANON | ECHO);
+		tcsetattr(tty, TCSANOW, &newt);
+		read(tty, &inputChar, 1);
+		tcsetattr(tty, TCSANOW, &oldt);
+#endif
+
+		return inputChar;
+	}
+
 	Console::Console()
 	{
 		m_IsRunning	  = true;
-
-		m_CommandLine = std::thread([this]() {
-#ifdef SBL_PLATFORM_WINDOWS
-			// Windows
-			HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
-			DWORD mode;
-			GetConsoleMode(hStdin, &mode);
-			mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-			SetConsoleMode(hStdin, mode & ~(ENABLE_LINE_INPUT));
-
-			SetConsoleCP(65001);
-			SetConsoleOutputCP(65001);
-#else
-			// Linux/macOS
-			termios oldt;
-			tcgetattr(STDIN_FILENO, &oldt);
-			termios newt	  = oldt;
-			newt.c_lflag	 &= ~(ICANON | ECHO);
-			newt.c_cc[VMIN]	  = 0;
-			newt.c_cc[VTIME]  = 1;
-			tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-
-			setbuf(stdout, NULL);
-
-			std::setlocale(LC_ALL, "en_US.UTF-8");
-#endif
-
-			while (this->m_IsRunning)
-			{
-				char inputChar = -1;
-
-#ifdef SBL_PLATFORM_WINDOWS
-				if (_kbhit())
-				{
-					inputChar = _getch();
-				}
-#elif SBL_PLATFORM_LINUX
-				struct termios newt, oldt;
-
-				int tty = open("/dev/tty", O_RDONLY);
-				tcgetattr(tty, &oldt);
-				newt		  = oldt;
-				newt.c_lflag &= ~(ICANON | ECHO);
-				tcsetattr(tty, TCSANOW, &newt);
-				read(tty, &inputChar, 1);
-				tcsetattr(tty, TCSANOW, &oldt);
-#endif
-
-				std::lock_guard<std::mutex> lock(m_ConsoleMutex);
-
-				switch (inputChar)
-				{
-					case -1: break;
-					case '\r':
-					case '\n':
-						m_CommandBuffer.clear();
-						m_CommandBufferUpdate();
-						break;
-					case 127: // DEL
-					case '\b':
-						if (m_CommandBuffer.size() > 0) m_CommandBuffer.pop_back();
-						m_CommandBufferUpdate();
-						break;
-					default:
-						m_CommandBuffer.push_back(inputChar);
-						m_CommandBufferUpdate();
-						break;
-				}
-			}
-
-#ifndef SBL_PLATFORM_WINDOWS
-			tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-#endif
-		});
-
-		m_Logger = std::thread([this]() {
-			m_CommandBufferUpdate();
-			while (this->m_IsRunning)
-			{
-				std::lock_guard<std::mutex> lock(m_ConsoleMutex);
-				if (!m_LogQueue.empty())
-				{
-					std::cout << m_LogQueue.front();
-					m_LogQueue.pop();
-				}
-			}
-		});
+		m_CommandLine = std::thread(&Console::m_CommandLineFunc, this);
+		m_Logger	  = std::thread(&Console::m_LoggerFunc, this);
+		m_Command	  = std::thread(&Console::m_CommandFunc, this);
 	}
 
 	Console::~Console()
@@ -173,6 +113,7 @@ namespace sbla
 		m_IsRunning = false;
 
 		m_CommandLine.join();
+		m_Command.join();
 		m_Logger.join();
 
 		std::lock_guard<std::mutex> lock(m_ConsoleMutex);
@@ -245,6 +186,102 @@ namespace sbla
 			std::lock_guard<std::mutex> lock(m_ConsoleMutex);
 			logFormat += m_CommandBuffer;
 			m_LogQueue.push(logFormat);
+		}
+	}
+	void Console::m_CommandLineFunc()
+	{
+#ifdef SBL_PLATFORM_WINDOWS
+		// Windows
+		HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
+		DWORD mode;
+		GetConsoleMode(hStdin, &mode);
+		mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+		SetConsoleMode(hStdin, mode & ~(ENABLE_LINE_INPUT));
+
+		SetConsoleCP(65001);
+		SetConsoleOutputCP(65001);
+#else
+		// Linux/macOS
+		termios oldt;
+		tcgetattr(STDIN_FILENO, &oldt);
+		termios newt	  = oldt;
+		newt.c_lflag	 &= ~(ICANON | ECHO);
+		newt.c_cc[VMIN]	  = 0;
+		newt.c_cc[VTIME]  = 1;
+		tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+		setbuf(stdout, NULL);
+
+		std::setlocale(LC_ALL, "en_US.UTF-8");
+#endif
+
+		while (m_IsRunning)
+		{
+			char inputChar = getInputChar();
+
+			std::lock_guard<std::mutex> lock(m_ConsoleMutex);
+
+			switch (inputChar)
+			{
+				case -1: break;
+				case '\r':
+				case '\n':
+					m_CommandMutex.lock();
+					m_CommandQueue.push(m_CommandBuffer);
+					m_CommandMutex.unlock();
+					m_CommandBuffer.clear();
+					m_CommandBufferUpdate();
+					break;
+				case 127: // DEL
+				case '\b':
+					if (m_CommandBuffer.size() > 0) m_CommandBuffer.pop_back();
+					m_CommandBufferUpdate();
+					break;
+				case -32: // arrow
+					inputChar = getInputChar();
+					// 72 up
+					// 80 down
+					// 75 left
+					// 77 right
+					break;
+				default:
+					// receive num character symbol
+					if (inputChar < 32 || inputChar > 126) break;
+					m_CommandBuffer.push_back(inputChar);
+					m_CommandBufferUpdate();
+					break;
+			}
+		}
+
+#ifndef SBL_PLATFORM_WINDOWS
+		tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+#endif
+	}
+
+	void Console::m_LoggerFunc()
+	{
+		m_CommandBufferUpdate();
+		while (m_IsRunning)
+		{
+			std::lock_guard<std::mutex> lock(m_ConsoleMutex);
+			if (!m_LogQueue.empty())
+			{
+				std::cout << m_LogQueue.front();
+				m_LogQueue.pop();
+			}
+		}
+	}
+
+	void Console::m_CommandFunc()
+	{
+		while (m_IsRunning)
+		{
+			std::lock_guard<std::mutex> lock(m_CommandMutex);
+			if (!m_CommandQueue.empty())
+			{
+				// if (m_CommandQueue.front() == "quit") m_IsRunning = false;
+				m_CommandQueue.pop();
+			}
 		}
 	}
 

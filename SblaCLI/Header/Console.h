@@ -51,16 +51,23 @@ namespace sbla
 		}
 
 	private:
+		void m_CommandLineFunc();
+		void m_LoggerFunc();
+		void m_CommandFunc();
+		void m_CommandBufferUpdate();
+
 		std::atomic<bool> m_IsRunning;
 
 		std::mutex m_ConsoleMutex;
 		std::string m_CommandBuffer;
 		std::queue<std::string> m_LogQueue;
 
+		std::mutex m_CommandMutex;
+		std::queue<std::string> m_CommandQueue;
+
 		std::thread m_CommandLine;
 		std::thread m_Logger;
-
-		void m_CommandBufferUpdate();
+		std::thread m_Command;
 
 		friend class Singleton<Console>;
 		Console();
