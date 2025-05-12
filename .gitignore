@@ -8,6 +8,9 @@ build/
 SibillaSandBox/*
 !SibillaSandBox/ConfigTemplate.toml
 
+SblaSandBox/*
+!SblaSandBox/ConfigTemplate.toml
+
 # Clangd
 .cache/
 

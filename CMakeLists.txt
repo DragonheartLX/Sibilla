@@ -11,14 +11,14 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY $<1:${CMAKE_BINARY_DIR}/lib>)
 set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install")
 set(SBL_ROOT_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 
-add_subdirectory(SibillaCommon)
-add_subdirectory(SibillaAdapter)
-add_subdirectory(SibillaChatBot)
-add_subdirectory(SibillaCLI)
+add_subdirectory(SblaCore)
+# add_subdirectory(SibillaAdapter)
+# add_subdirectory(SibillaChatBot)
+add_subdirectory(SblaCLI)
 
-add_custom_target(SibillaSandBox
+add_custom_target(SblaSandBox
     DEPENDS install
     COMMENT "install for sandbox"
     COMMENT "Copy to sandbox"
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_INSTALL_PREFIX}/bin ${SBL_ROOT_PATH}/SibillaSandBox
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_INSTALL_PREFIX}/bin ${SBL_ROOT_PATH}/SblaSandBox
 )
