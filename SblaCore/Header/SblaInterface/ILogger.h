@@ -3,6 +3,7 @@
 #include <format>
 #include <string>
 #include <utility>
+
 namespace sbla
 {
 	enum class LoggerLevel
@@ -22,6 +23,12 @@ namespace sbla
 		~ILogger()													= default;
 
 		virtual void log(LoggerLevel level, const std::string& log) = 0;
+
+		static void setLoggerLevel(LoggerLevel level);
+		static LoggerLevel getLoggerLevel();
+
+		static void setLocation(const std::string& location);
+		static const std::string& getLocation();
 
 		// template <typename... Args>
 		// void log_format(LoggerLevel level, std::format_string<Args...> fmt, Args&&... args)
@@ -64,5 +71,9 @@ namespace sbla
 		{
 			this->log(LoggerLevel::trace, std::format(fmt, std::forward<Args>(args)...));
 		}
+
+	private:
+		static LoggerLevel s_Level;
+		static std::string s_location;
 	};
 } // namespace sbla

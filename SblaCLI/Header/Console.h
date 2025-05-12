@@ -2,6 +2,10 @@
 #include <SblaCore/Utils/Singleton.h>
 #include <SblaInterface/ILogger.h>
 
+#include <atomic>
+#include <queue>
+#include <string>
+
 namespace sbla
 {
 	class Console: public ILogger, public Singleton<Console>
@@ -47,6 +51,17 @@ namespace sbla
 		}
 
 	private:
+		std::atomic<bool> m_IsRunning;
+
+		std::mutex m_ConsoleMutex;
+		std::string m_CommandBuffer;
+		std::queue<std::string> m_LogQueue;
+
+		std::thread m_CommandLine;
+		std::thread m_Logger;
+
+		void m_CommandBufferUpdate();
+
 		friend class Singleton<Console>;
 		Console();
 	};

@@ -1,6 +1,6 @@
 #pragma once
-#include "ILogger.h"
-#include "Macros.h"
+#include "SblaCore/Macros.h"
+#include "SblaInterface/ILogger.h"
 
 // Export entry point
 #ifdef SBL_BUILD_SHARED
