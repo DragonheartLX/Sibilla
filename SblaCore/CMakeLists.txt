@@ -3,7 +3,7 @@ file(GLOB_RECURSE CORE_SRC LIST_DIRECTORIES false
     Source/*.cpp
     Source/**/*.cpp)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(SibillaCore)

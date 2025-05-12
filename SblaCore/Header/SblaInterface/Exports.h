@@ -1,6 +1,40 @@
 #pragma once
 #include "SblaCore/Macros.h"
+#include "SblaInterface/IAdapter.h"
+#include "SblaInterface/IChatBot.h"
 #include "SblaInterface/ILogger.h"
+
+struct AdapterInfo
+{
+	std::string name	= "";
+	std::string version = "";
+};
+
+struct ChatBotInfo
+{
+	std::string name	= "";
+	std::string version = "";
+	std::string adapter = "";
+};
+
+struct InitInfo
+{
+	sbla::ILogger* log		= nullptr;
+	sbla::IAdapter* adapter = nullptr;
+	sbla::IChatBot* chatBot = nullptr;
+	AdapterInfo adapterInfo = {};
+	ChatBotInfo chatBotInfo = {};
+};
+
+static sbla::ILogger* logger = nullptr;
+
+#ifdef SBL_ADAPTER_BUILD
+sbla::IAdapter* initAdapter(AdapterInfo* info);
+#endif
+
+#ifdef SBL_CHATBOT_BUILD
+sbla::IChatBot* initChatBot(ChatBotInfo* info);
+#endif
 
 // Export entry point
 #ifdef SBL_BUILD_SHARED
@@ -9,25 +43,17 @@ extern "C"
 {
 	#endif
 
-	#ifdef SBL_ADAPTER_BUILD
-	SBL_API scom::Adapter* createAdapter(scom::AdapterInfo* info);
-
-	SBL_API void init(scom::LoggerCallBack cb)
+	SBL_API void init(InitInfo* info)
 	{
-		scom::Logger::bind(cb);
-		scom::Logger::setLoggerLocation("Adapter");
-	};
+		logger = info->log;
+	#ifdef SBL_ADAPTER_BUILD
+		info->adapter = initAdapter(&info->adapterInfo);
 	#endif
 
 	#ifdef SBL_CHATBOT_BUILD
-	SBL_API scom::ChatBot* createChatBot(scom::ChatBotInfo* info);
-
-	SBL_API void init(scom::LoggerCallBack cb)
-	{
-		scom::Logger::bind(cb);
-		scom::Logger::setLoggerLocation("ChatBot");
-	};
+		info->chatBot = initChatBot(&info->chatBotInfo);
 	#endif
+	};
 
 	#ifdef __cplusplus
 }

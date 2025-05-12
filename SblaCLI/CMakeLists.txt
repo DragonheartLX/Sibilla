@@ -3,7 +3,7 @@ file(GLOB_RECURSE CLI_SRC LIST_DIRECTORIES false
     Source/*.cpp
     Source/**/*.cpp)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(SibillaCLI)
@@ -17,6 +17,9 @@ add_executable(SblaCLI ${CLI_SRC})
 target_include_directories(SblaCLI PRIVATE Header)
 
 target_link_libraries(SblaCLI PRIVATE SblaCore)
+
+find_path(DYLIB_INCLUDE_DIRS "dylib.hpp")
+    target_include_directories(SblaCLI PRIVATE ${DYLIB_INCLUDE_DIRS})
 
 install(TARGETS SblaCLI
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin

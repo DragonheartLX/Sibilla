@@ -27,9 +27,6 @@ namespace sbla
 		static void setLoggerLevel(LoggerLevel level);
 		static LoggerLevel getLoggerLevel();
 
-		static void setLocation(const std::string& location);
-		static const std::string& getLocation();
-
 		// template <typename... Args>
 		// void log_format(LoggerLevel level, std::format_string<Args...> fmt, Args&&... args)
 		// {
@@ -74,6 +71,5 @@ namespace sbla
 
 	private:
 		static LoggerLevel s_Level;
-		static std::string s_location;
 	};
 } // namespace sbla

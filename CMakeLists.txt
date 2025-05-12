@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.19)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(Sibilla)
@@ -12,8 +12,8 @@ set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install")
 set(SBL_ROOT_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 
 add_subdirectory(SblaCore)
-# add_subdirectory(SibillaAdapter)
-# add_subdirectory(SibillaChatBot)
+add_subdirectory(SblaAdapter)
+add_subdirectory(SblaChatBot)
 add_subdirectory(SblaCLI)
 
 add_custom_target(SblaSandBox

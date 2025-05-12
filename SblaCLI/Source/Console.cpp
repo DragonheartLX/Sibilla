@@ -22,7 +22,7 @@
 
 /*
     
-    $reset $color [HH:MM:SS][Location]: {msg} $color
+    $reset $color [HH:MM:SS][Level]: {msg} $color
     $reset CMD Output
     $reset SCLI > 
 
@@ -78,7 +78,6 @@ namespace sbla
 {
 	Console::Console()
 	{
-		setLocation("CMD");
 		m_IsRunning	  = true;
 
 		m_CommandLine = std::thread([this]() {
@@ -203,19 +202,35 @@ namespace sbla
 
 		// Set color
 		std::string colorFormat;
+		std::string levelFormat;
 		switch (level)
 		{
-			case LoggerLevel::fatal: colorFormat = "\x1b[38;2;255;255;255m\x1b[48;2;255;0;0m"; break;
-			case LoggerLevel::error: colorFormat = "\x1b[38;2;255;0;0m\x1b[48;2;0;0;0m"; break;
-			case LoggerLevel::warning: colorFormat = "\x1b[38;2;255;255;0m\x1b[48;2;0;0;0m"; break;
-			case LoggerLevel::info: colorFormat = "\x1b[38;2;0;255;0m\x1b[48;2;0;0;0m"; break;
-			case LoggerLevel::debug: colorFormat = "\x1b[38;2;255;255;255m\x1b[48;2;0;0;0m"; break;
-			case LoggerLevel::trace: colorFormat = "\x1b[38;2;192;192;192m\x1b[48;2;0;0;0m"; break;
+			case LoggerLevel::fatal:
+				colorFormat = "\x1b[38;2;255;255;255m\x1b[48;2;255;0;0m";
+				levelFormat = "[fatal]";
+				break;
+			case LoggerLevel::error:
+				colorFormat = "\x1b[38;2;255;0;0m\x1b[48;2;0;0;0m";
+				levelFormat = "[error]";
+				break;
+			case LoggerLevel::warning:
+				colorFormat = "\x1b[38;2;255;255;0m\x1b[48;2;0;0;0m";
+				levelFormat = "[warning]";
+				break;
+			case LoggerLevel::info:
+				colorFormat = "\x1b[38;2;0;255;0m\x1b[48;2;0;0;0m";
+				levelFormat = "[info]";
+				break;
+			case LoggerLevel::debug:
+				colorFormat = "\x1b[38;2;255;255;255m\x1b[48;2;0;0;0m";
+				levelFormat = "[debug]";
+				break;
+			case LoggerLevel::trace:
+				colorFormat = "\x1b[38;2;192;192;192m\x1b[48;2;0;0;0m";
+				levelFormat = "[trace]";
+				break;
 			default: return;
 		}
-
-		// Logger location
-		std::string locationFormat = std::format("[{0}]: ", getLocation());
 
 		std::istringstream logSS(log);
 		for (std::string line; std::getline(logSS, line);)
@@ -225,7 +240,7 @@ namespace sbla
 			logFormat += CLEAR_LINE;
 			logFormat += RESET;
 
-			logFormat  = logFormat + colorFormat + timeFormat + locationFormat + BOLD + line + RESET + "\n" + RESET + "SCLI> ";
+			logFormat  = logFormat + colorFormat + timeFormat + levelFormat + BOLD + line + RESET + "\n" + RESET + "SCLI> ";
 
 			std::lock_guard<std::mutex> lock(m_ConsoleMutex);
 			logFormat += m_CommandBuffer;
