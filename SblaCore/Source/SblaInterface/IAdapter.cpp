@@ -6,6 +6,8 @@ namespace sbla
 
 	void IAdapter::run()
 	{
+		m_Running		   = true;
+
 		m_ReceiveThread	   = std::thread(std::bind(&IAdapter::receive, this));
 		m_SendThread	   = std::thread(std::bind(&IAdapter::send, this));
 		m_MsgProcessThread = std::thread([this]() {
@@ -62,6 +64,8 @@ namespace sbla
 	void IAdapter::exit()
 	{
 		m_Running = false;
+		onExit();
+
 		m_ReceiveThread.join();
 		m_MsgProcessThread.join();
 		m_SendThread.join();

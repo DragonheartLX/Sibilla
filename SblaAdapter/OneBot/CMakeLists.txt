@@ -22,6 +22,12 @@ target_include_directories(OneBotAdapter PRIVATE Header)
 
 target_link_libraries(OneBotAdapter PRIVATE SblaCore)
 
+find_package(CURL REQUIRED)
+    target_link_libraries(OneBotAdapter PRIVATE CURL::libcurl)
+
+find_package(nlohmann_json CONFIG REQUIRED)
+    target_link_libraries(OneBotAdapter PRIVATE nlohmann_json::nlohmann_json)
+
 install(TARGETS OneBotAdapter
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/Adapter
     LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/Adapter

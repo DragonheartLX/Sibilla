@@ -22,6 +22,12 @@ target_include_directories(LizBot PRIVATE Header)
 
 target_link_libraries(LizBot PRIVATE SblaCore)
 
+find_package(CURL REQUIRED)
+    target_link_libraries(LizBot PRIVATE CURL::libcurl)
+
+find_package(nlohmann_json CONFIG REQUIRED)
+    target_link_libraries(LizBot PRIVATE nlohmann_json::nlohmann_json)
+
 install(TARGETS LizBot
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/Bot
     LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/Bot

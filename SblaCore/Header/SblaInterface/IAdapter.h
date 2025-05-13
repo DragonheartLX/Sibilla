@@ -25,11 +25,11 @@ namespace sbla
 
 		virtual void receive() = 0;
 		virtual void send()	   = 0;
+		virtual void onExit()  = 0;
 
 		void run();
 		void pushMsg(MessageRecv* recv);
 		bool pullMsg(MessageSend* send);
-
 		void bindCallBack(AdapterCallBack cb);
 		bool isRunning();
 		void exit();

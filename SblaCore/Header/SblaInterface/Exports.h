@@ -29,6 +29,7 @@ struct InitInfo
 };
 
 static sbla::ILogger* logger = nullptr;
+static sbla::Config* config	 = nullptr;
 
 #ifdef SBL_ADAPTER_BUILD
 sbla::IAdapter* initAdapter(AdapterInfo* info);
@@ -48,6 +49,7 @@ extern "C"
 	SBL_API void init(InitInfo* info)
 	{
 		logger = info->logger;
+		config = info->config;
 	#ifdef SBL_ADAPTER_BUILD
 		info->adapter = initAdapter(&info->adapterInfo);
 	#endif

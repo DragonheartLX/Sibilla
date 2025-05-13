@@ -68,7 +68,8 @@ namespace sbla
 					if (lib->load())
 					{
 						m_CB.insert(std::pair(entry.path().stem().string().substr(PREFIX), lib));
-						if (GlobalInstance::getInstance()->config.find(entry.path().stem().string().substr(PREFIX)) != GlobalInstance::getInstance()->config.end())
+						if (GlobalInstance::getInstance()->config.find(entry.path().stem().string().substr(PREFIX)) !=
+							GlobalInstance::getInstance()->config.end())
 						{
 							// adpaterType
 							// adpaterCfgs
@@ -83,7 +84,9 @@ namespace sbla
 
 									InitInfo info	 = {};
 									lib->exec(&info);
-									ins.cbPtr = info.chatBot;
+									ins.cbPtr	= info.chatBot;
+
+									info.config = &GlobalInstance::getInstance()->config[cfg["adpaterCfg"].value()];
 
 									m_Ada[cfg["adpater"].value()]->exec(&info);
 									ins.adaPtr = info.adapter;
