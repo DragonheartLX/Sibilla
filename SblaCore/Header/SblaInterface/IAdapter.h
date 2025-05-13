@@ -32,6 +32,7 @@ namespace sbla
 
 		void bindCallBack(AdapterCallBack cb);
 		bool isRunning();
+		void exit();
 
 	private:
 		std::atomic<bool> m_Running;

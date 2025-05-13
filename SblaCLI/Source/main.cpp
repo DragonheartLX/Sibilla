@@ -14,18 +14,6 @@ int main(int argc, char** argv)
 		return EXIT_FAILURE;
 	}
 
-	{
-		// Check config (dev)
-		for (const auto& [title, cfg] : sbla::GlobalInstance::getInstance()->config)
-		{
-			sbla::Console::debug("Title: {0}", title);
-			for (const auto& [key, value] : cfg.content)
-			{
-				sbla::Console::debug("\t{0} = {1}", key, value);
-			}
-		}
-	}
-
 	if (sbla::SblaCLI::init() == false)
 	{
 		sbla::Console::fatal("CLI init error!");

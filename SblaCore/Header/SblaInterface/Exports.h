@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SblaCore/Config.h"
 #include "SblaCore/Macros.h"
 #include "SblaInterface/IAdapter.h"
 #include "SblaInterface/IChatBot.h"
@@ -15,7 +16,6 @@ struct ChatBotInfo
 {
 	std::string name	= "";
 	std::string version = "";
-	std::string adapter = "";
 };
 
 struct InitInfo
@@ -25,6 +25,7 @@ struct InitInfo
 	sbla::IChatBot* chatBot = nullptr;
 	AdapterInfo adapterInfo = {};
 	ChatBotInfo chatBotInfo = {};
+	sbla::Config* config	= nullptr;
 };
 
 static sbla::ILogger* logger = nullptr;

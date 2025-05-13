@@ -44,7 +44,7 @@ namespace sbla
 		{
 			// Config not exist
 			// dump
-			Console::warning("Config not find. Create new config.");
+			Console::warn("Config not find. Create new config.");
 
 			std::ofstream dump(cfgPath);
 			if (dump.is_open() == false)
@@ -81,8 +81,8 @@ namespace sbla
 				Console::setLoggerLevel(LoggerLevel::fatal);
 			else if (loggerLevel == "error")
 				Console::setLoggerLevel(LoggerLevel::error);
-			else if (loggerLevel == "warning")
-				Console::setLoggerLevel(LoggerLevel::warning);
+			else if (loggerLevel == "warn")
+				Console::setLoggerLevel(LoggerLevel::warn);
 			else if (loggerLevel == "info")
 				Console::setLoggerLevel(LoggerLevel::info);
 			else if (loggerLevel == "debug")
@@ -90,7 +90,7 @@ namespace sbla
 			else if (loggerLevel == "trace")
 				Console::setLoggerLevel(LoggerLevel::trace);
 			else
-				Console::warning("Unknown log level: {0}, use default level.", loggerLevel);
+				Console::warn("Unknown log level: {0}, use default level.", loggerLevel);
 		}
 
 		// Sibilla

@@ -10,7 +10,7 @@ namespace sbla
 	{
 		fatal = 0,
 		error,
-		warning,
+		warn,
 		info,
 		debug,
 		trace
@@ -46,9 +46,9 @@ namespace sbla
 		}
 
 		template <typename... Args>
-		void warning(std::format_string<Args...> fmt, Args&&... args)
+		void warn(std::format_string<Args...> fmt, Args&&... args)
 		{
-			this->log(LoggerLevel::warning, std::format(fmt, std::forward<Args>(args)...));
+			this->log(LoggerLevel::warn, std::format(fmt, std::forward<Args>(args)...));
 		}
 
 		template <typename... Args>

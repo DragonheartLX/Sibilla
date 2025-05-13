@@ -11,7 +11,7 @@ sbla::IAdapter* initAdapter(AdapterInfo* info)
 
 OneBot::OneBot() { logger->info("OneBot v11 init."); }
 
-OneBot::~OneBot() {}
+OneBot::~OneBot() { logger->info("OneBot v11 exit."); }
 
 void OneBot::receive() {}
 

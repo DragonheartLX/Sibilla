@@ -1,12 +1,25 @@
 #pragma once
 
 #include <SblaCore/Utils/Singleton.h>
+#include <SblaInterface/IAdapter.h>
+#include <SblaInterface/IChatBot.h>
 
-#include "SblaInterface/Exports.h"
+#include <map>
+#include <string>
+#include <vector>
+
+#include "Loader.h"
 
 namespace sbla
 {
-	using DyLibInitFunc = void (*)(InitInfo *);
+	struct InstanceInfo
+	{
+		std::string adapter = "";
+		std::string chatBot = "";
+
+		IChatBot* cbPtr		= nullptr;
+		IAdapter* adaPtr	= nullptr;
+	};
 
 	class SblaCLI: public Singleton<SblaCLI>
 	{
@@ -16,7 +29,10 @@ namespace sbla
 		bool run();
 
 	public:
-		bool m_IsRunning = true;
+		std::vector<InstanceInfo> m_Instance;
+
+		std::map<std::string, Loader*> m_CB;
+		std::map<std::string, Loader*> m_Ada;
 
 		friend class Singleton<SblaCLI>;
 		SblaCLI();

@@ -17,7 +17,7 @@ access_token = "1234"
 
 [ChatBot]
 [ChatBot.Liz]
-adpaterType = "OneBot"
+adpater = "OneBotAdapter"
 adpaterCfg = "OneBotCfg"
 bot_id = "123456789"
 admin_id = "987654321"

@@ -6,7 +6,6 @@ sbla::IChatBot* initChatBot(ChatBotInfo* info)
 {
 	info->name	  = "Liz Brucstine";
 	info->version = "0.0.0-dev";
-	info->adapter = "OneBot";
 	return new Liz;
 };
 

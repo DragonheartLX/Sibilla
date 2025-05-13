@@ -10,6 +10,8 @@
 #include <string>
 #include <thread>
 
+#include "GlobalInstance.h"
+
 #ifdef SBL_PLATFORM_WINDOWS
 	#include <Windows.h>
 	#include <conio.h>
@@ -102,7 +104,6 @@ namespace sbla
 
 	Console::Console()
 	{
-		m_IsRunning	  = true;
 		m_CommandLine = std::thread(&Console::m_CommandLineFunc, this);
 		m_Logger	  = std::thread(&Console::m_LoggerFunc, this);
 		m_Command	  = std::thread(&Console::m_CommandFunc, this);
@@ -110,8 +111,6 @@ namespace sbla
 
 	Console::~Console()
 	{
-		m_IsRunning = false;
-
 		m_CommandLine.join();
 		m_Command.join();
 		m_Logger.join();
@@ -148,27 +147,27 @@ namespace sbla
 		{
 			case LoggerLevel::fatal:
 				colorFormat = "\x1b[38;2;255;255;255m\x1b[48;2;255;0;0m";
-				levelFormat = "[fatal]";
+				levelFormat = "[fatal] ";
 				break;
 			case LoggerLevel::error:
 				colorFormat = "\x1b[38;2;255;0;0m\x1b[48;2;0;0;0m";
-				levelFormat = "[error]";
+				levelFormat = "[error] ";
 				break;
-			case LoggerLevel::warning:
+			case LoggerLevel::warn:
 				colorFormat = "\x1b[38;2;255;255;0m\x1b[48;2;0;0;0m";
-				levelFormat = "[warning]";
+				levelFormat = "[warn] ";
 				break;
 			case LoggerLevel::info:
 				colorFormat = "\x1b[38;2;0;255;0m\x1b[48;2;0;0;0m";
-				levelFormat = "[info]";
+				levelFormat = "[info] ";
 				break;
 			case LoggerLevel::debug:
 				colorFormat = "\x1b[38;2;255;255;255m\x1b[48;2;0;0;0m";
-				levelFormat = "[debug]";
+				levelFormat = "[debug] ";
 				break;
 			case LoggerLevel::trace:
 				colorFormat = "\x1b[38;2;192;192;192m\x1b[48;2;0;0;0m";
-				levelFormat = "[trace]";
+				levelFormat = "[trace] ";
 				break;
 			default: return;
 		}
@@ -215,7 +214,7 @@ namespace sbla
 		std::setlocale(LC_ALL, "en_US.UTF-8");
 #endif
 
-		while (m_IsRunning)
+		while (GlobalInstance::getInstance()->isRunning)
 		{
 			char inputChar = getInputChar();
 
@@ -261,7 +260,7 @@ namespace sbla
 	void Console::m_LoggerFunc()
 	{
 		m_CommandBufferUpdate();
-		while (m_IsRunning)
+		while (GlobalInstance::getInstance()->isRunning)
 		{
 			std::lock_guard<std::mutex> lock(m_ConsoleMutex);
 			if (!m_LogQueue.empty())
@@ -274,12 +273,12 @@ namespace sbla
 
 	void Console::m_CommandFunc()
 	{
-		while (m_IsRunning)
+		while (GlobalInstance::getInstance()->isRunning)
 		{
 			std::lock_guard<std::mutex> lock(m_CommandMutex);
 			if (!m_CommandQueue.empty())
 			{
-				// if (m_CommandQueue.front() == "quit") m_IsRunning = false;
+				if (m_CommandQueue.front() == "quit") GlobalInstance::getInstance()->isRunning = false;
 				m_CommandQueue.pop();
 			}
 		}

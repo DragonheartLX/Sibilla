@@ -28,9 +28,9 @@ namespace sbla
 		}
 
 		template <typename... Args>
-		static void warning(std::format_string<Args...> fmt, Args&&... args)
+		static void warn(std::format_string<Args...> fmt, Args&&... args)
 		{
-			getInstance()->log(LoggerLevel::warning, std::format(fmt, std::forward<Args>(args)...));
+			getInstance()->log(LoggerLevel::warn, std::format(fmt, std::forward<Args>(args)...));
 		}
 
 		template <typename... Args>
@@ -56,8 +56,6 @@ namespace sbla
 		void m_LoggerFunc();
 		void m_CommandFunc();
 		void m_CommandBufferUpdate();
-
-		std::atomic<bool> m_IsRunning;
 
 		std::mutex m_ConsoleMutex;
 		std::string m_CommandBuffer;

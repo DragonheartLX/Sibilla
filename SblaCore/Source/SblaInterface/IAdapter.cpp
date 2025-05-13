@@ -2,13 +2,7 @@
 
 namespace sbla
 {
-	IAdapter::~IAdapter()
-	{
-		m_Running = false;
-		m_ReceiveThread.join();
-		m_MsgProcessThread.join();
-		m_SendThread.join();
-	}
+	IAdapter::~IAdapter() {}
 
 	void IAdapter::run()
 	{
@@ -64,5 +58,13 @@ namespace sbla
 	void IAdapter::bindCallBack(AdapterCallBack cb) { m_MsgProcessCallBack = cb; }
 
 	bool IAdapter::isRunning() { return m_Running; }
+
+	void IAdapter::exit()
+	{
+		m_Running = false;
+		m_ReceiveThread.join();
+		m_MsgProcessThread.join();
+		m_SendThread.join();
+	}
 
 } // namespace sbla
