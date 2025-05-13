@@ -1,24 +1,23 @@
-#Sibilla Config Template
+# Sibilla Config Template
 
 # Config Version
 version = 1
 
 [dev]
-# 0 = fatal, 1 = error, 2 = warning, 3 = info, 4 = debug, 5 = trace
-log_level = 3
+# fatal, error, warning, info, debug, trace
+log_level = "info"
 
 [Sibilla]
-# msg delay /ms
-msg_delay = 1000
 
-thread_pool_size = 0
-
-[bot.liz]
-adpater = "Napcat"
-connent_type = "wsr"
-
-bot_id = 123456789
-admin_id = 987654321
-
+[Adapter]
+[Adapter.OneBotCfg]
+connect_type = "wsr"
 ws_url = "ws://example.com"
 access_token = "1234"
+
+[ChatBot]
+[ChatBot.Liz]
+adpaterType = "OneBot"
+adpaterCfg = "OneBotCfg"
+bot_id = "123456789"
+admin_id = "987654321"

@@ -1,13 +1,30 @@
 #include <cstdlib>
 
 #include "Console.h"
+#include "GlobalInstance.h"
 #include "SblaCLI.h"
-#include "SblaInterface/ILogger.h"
 
 int main(int argc, char** argv)
 {
 	if (sbla::Console::init() == false) return EXIT_FAILURE;
-	sbla::Console::setLoggerLevel(sbla::LoggerLevel::trace);
+
+	if (sbla::GlobalInstance::init() == false)
+	{
+		sbla::Console::fatal("Instance init error!");
+		return EXIT_FAILURE;
+	}
+
+	{
+		// Check config (dev)
+		for (const auto& [title, cfg] : sbla::GlobalInstance::getInstance()->config)
+		{
+			sbla::Console::debug("Title: {0}", title);
+			for (const auto& [key, value] : cfg.content)
+			{
+				sbla::Console::debug("\t{0} = {1}", key, value);
+			}
+		}
+	}
 
 	if (sbla::SblaCLI::init() == false)
 	{
