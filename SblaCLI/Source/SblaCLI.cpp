@@ -12,6 +12,12 @@
 #include "GlobalInstance.h"
 #include "Loader.h"
 
+#if SBL_PLATFORM_WINDOWS
+	#define PREFIX 0
+#else
+	#define PREFIX 3
+#endif
+
 namespace sbla
 {
 	SblaCLI::SblaCLI() {}
@@ -43,9 +49,9 @@ namespace sbla
 			{
 				for (const auto& entry : std::filesystem::directory_iterator(adaPath))
 				{
-					Loader* lib = new Loader(adaPath.string(), entry.path().stem().string());
+					Loader* lib = new Loader(adaPath.string(), entry.path().stem().string().substr(PREFIX));
 
-					if (lib->load()) m_Ada.insert(std::pair(entry.path().stem().string(), lib));
+					if (lib->load()) m_Ada.insert(std::pair(entry.path().stem().string().substr(PREFIX), lib));
 				}
 			};
 		}
@@ -57,23 +63,23 @@ namespace sbla
 			{
 				for (const auto& entry : std::filesystem::directory_iterator(cbPath))
 				{
-					Loader* lib = new Loader(cbPath.string(), entry.path().stem().string());
+					Loader* lib = new Loader(cbPath.string(), entry.path().stem().string().substr(PREFIX));
 
 					if (lib->load())
 					{
-						m_CB.insert(std::pair(entry.path().stem().string(), lib));
-						if (GlobalInstance::getInstance()->config.find(entry.path().stem().string()) != GlobalInstance::getInstance()->config.end())
+						m_CB.insert(std::pair(entry.path().stem().string().substr(PREFIX), lib));
+						if (GlobalInstance::getInstance()->config.find(entry.path().stem().string().substr(PREFIX)) != GlobalInstance::getInstance()->config.end())
 						{
 							// adpaterType
 							// adpaterCfgs
-							Config cfg = GlobalInstance::getInstance()->config[entry.path().stem().string()];
+							Config cfg = GlobalInstance::getInstance()->config[entry.path().stem().string().substr(PREFIX)];
 
 							if (cfg["adpater"].has_value())
 								if (m_Ada.find(cfg["adpater"].value()) != m_Ada.end())
 								{
 									InstanceInfo ins = {};
 									ins.adapter		 = cfg["adpater"].value();
-									ins.chatBot		 = entry.path().stem().string();
+									ins.chatBot		 = entry.path().stem().string().substr(PREFIX);
 
 									InitInfo info	 = {};
 									lib->exec(&info);

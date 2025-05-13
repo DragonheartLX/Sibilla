@@ -51,5 +51,5 @@
 		#define SBL_API
 	#endif
 #else
-	#define SBL_API
+	#define SBL_API __attribute__((visibility("default")))
 #endif
