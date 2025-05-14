@@ -24,14 +24,8 @@ namespace sbla
 
 		virtual void log(LoggerLevel level, const std::string& log) = 0;
 
-		static void setLoggerLevel(LoggerLevel level);
-		static LoggerLevel getLoggerLevel();
-
-		// template <typename... Args>
-		// void log_format(LoggerLevel level, std::format_string<Args...> fmt, Args&&... args)
-		// {
-		// 	this->log(level, std::format(fmt, std::forward<Args>(args)...));
-		// }
+		static void setLevel(LoggerLevel level);
+		static LoggerLevel getLevel();
 
 		template <typename... Args>
 		void fatal(std::format_string<Args...> fmt, Args&&... args)

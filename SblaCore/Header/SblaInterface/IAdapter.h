@@ -28,13 +28,18 @@ namespace sbla
 		virtual void onExit()  = 0;
 
 		void run();
+
 		void pushMsg(MessageRecv* recv);
 		bool pullMsg(MessageSend* send);
+
 		void bindCallBack(AdapterCallBack cb);
+
 		bool isRunning();
 		void exit();
 
 	private:
+		void m_MsgProcess();
+
 		std::atomic<bool> m_Running;
 
 		std::mutex m_ReceiveMutex;

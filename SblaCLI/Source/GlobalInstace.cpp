@@ -1,17 +1,14 @@
+#include <SblaCore/Config.h>
+#include <SblaInterface/ILogger.h>
+
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <string>
-#include <toml++/impl/parse_error.hpp>
-#include <toml++/impl/parser.hpp>
-#include <toml++/impl/std_optional.hpp>
-#include <toml++/impl/table.hpp>
 #include <toml++/toml.hpp>
 
 #include "Console.h"
 #include "GlobalInstance.h"
-#include "SblaCore/Config.h"
-#include "SblaInterface/ILogger.h"
 
 // clang-format off
 static const char templateConfig[] =
@@ -78,17 +75,17 @@ namespace sbla
 			std::string loggerLevel = cfg["dev"]["log_level"].value_or("info");
 
 			if (loggerLevel == "fatal")
-				Console::setLoggerLevel(LoggerLevel::fatal);
+				Console::setLevel(LoggerLevel::fatal);
 			else if (loggerLevel == "error")
-				Console::setLoggerLevel(LoggerLevel::error);
+				Console::setLevel(LoggerLevel::error);
 			else if (loggerLevel == "warn")
-				Console::setLoggerLevel(LoggerLevel::warn);
+				Console::setLevel(LoggerLevel::warn);
 			else if (loggerLevel == "info")
-				Console::setLoggerLevel(LoggerLevel::info);
+				Console::setLevel(LoggerLevel::info);
 			else if (loggerLevel == "debug")
-				Console::setLoggerLevel(LoggerLevel::debug);
+				Console::setLevel(LoggerLevel::debug);
 			else if (loggerLevel == "trace")
-				Console::setLoggerLevel(LoggerLevel::trace);
+				Console::setLevel(LoggerLevel::trace);
 			else
 				Console::warn("Unknown log level: {0}, use default level.", loggerLevel);
 		}

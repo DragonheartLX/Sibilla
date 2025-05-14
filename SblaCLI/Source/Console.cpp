@@ -125,7 +125,7 @@ namespace sbla
 
 	void Console::log(LoggerLevel level, const std::string& log)
 	{
-		if (level > getLoggerLevel()) return;
+		if (level > getLevel()) return;
 
 		// Get time
 		std::chrono::time_point time = std::chrono::system_clock::now();

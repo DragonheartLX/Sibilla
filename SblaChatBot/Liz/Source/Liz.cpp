@@ -8,6 +8,8 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
+static std::string debugLog;
+
 sbla::IChatBot* initChatBot(ChatBotInfo* info)
 {
 	info->name	  = "Liz Brucstine";
@@ -21,6 +23,26 @@ size_t write_data(void* buffer, size_t size, size_t nmemb, void* userp)
 	std::string* response = static_cast<std::string*>(userp);
 	response->append(static_cast<char*>(buffer), real_size);
 	return real_size;
+}
+
+int DebugCallback(CURL* handle, curl_infotype type, char* data, size_t size, void* userptr)
+{
+	std::string* log = static_cast<std::string*>(userptr);
+
+	if (type == CURLINFO_HEADER_OUT)
+	{
+		log->append("[REQUEST HEADERS]:\n");
+		log->append(data, size);
+	}
+	else if (type == CURLINFO_DATA_OUT)
+	{
+		log->append("[REQUEST BODY]:\n");
+		log->append(data, size);
+	}
+
+	logger->trace("{0}", *log);
+	log->clear();
+	return 0;
 }
 
 Liz::Liz() { curl_global_init(CURL_GLOBAL_ALL); }
@@ -59,6 +81,10 @@ bool Liz::msgProcessCallBack(sbla::MessageRecv* recv, sbla::MessageSend* send)
 				curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
 				curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
 
+				// curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+				// curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, DebugCallback);
+				// curl_easy_setopt(curl, CURLOPT_DEBUGDATA, &debugLog);
+
 				res = curl_easy_perform(curl);
 
 				if (res == CURLE_OK)
@@ -70,6 +96,9 @@ bool Liz::msgProcessCallBack(sbla::MessageRecv* recv, sbla::MessageSend* send)
 					send->content.content.push_back(sbla::SingleMsg{sbla::SingleMsgType::Text, data["hitokoto"].get<std::string>()});
 				}
 			}
+
+			logger->trace("responce: {0}", curl_easy_strerror(res));
+
 			curl_easy_cleanup(curl);
 			if (res == CURLE_OK) return true;
 		}

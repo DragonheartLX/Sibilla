@@ -8,34 +8,9 @@ namespace sbla
 	{
 		m_Running		   = true;
 
-		m_ReceiveThread	   = std::thread(std::bind(&IAdapter::receive, this));
-		m_SendThread	   = std::thread(std::bind(&IAdapter::send, this));
-		m_MsgProcessThread = std::thread([this]() {
-			MessageRecv* recv = nullptr;
-
-			while (isRunning())
-			{
-				m_ReceiveMutex.lock();
-				if (!m_ReceiveQueue.empty())
-				{
-					recv = m_ReceiveQueue.front();
-					m_ReceiveQueue.pop();
-					m_ReceiveMutex.unlock();
-
-					MessageSend* send = new MessageSend();
-					if (m_MsgProcessCallBack(recv, send))
-					{
-						m_SendMutex.lock();
-						m_SendQueue.push(send);
-						m_SendMutex.unlock();
-					}
-
-					delete recv;
-					continue;
-				}
-				m_ReceiveMutex.unlock();
-			}
-		});
+		m_ReceiveThread	   = std::thread(&IAdapter::receive, this);
+		m_SendThread	   = std::thread(&IAdapter::send, this);
+		m_MsgProcessThread = std::thread(&IAdapter::m_MsgProcess, this);
 	}
 	void IAdapter::pushMsg(MessageRecv* recv)
 	{
@@ -69,6 +44,34 @@ namespace sbla
 		m_ReceiveThread.join();
 		m_MsgProcessThread.join();
 		m_SendThread.join();
+	}
+
+	void IAdapter::m_MsgProcess()
+	{
+		MessageRecv* recv = nullptr;
+
+		while (isRunning())
+		{
+			m_ReceiveMutex.lock();
+			if (!m_ReceiveQueue.empty())
+			{
+				recv = m_ReceiveQueue.front();
+				m_ReceiveQueue.pop();
+				m_ReceiveMutex.unlock();
+
+				MessageSend* send = new MessageSend();
+				if (m_MsgProcessCallBack(recv, send))
+				{
+					m_SendMutex.lock();
+					m_SendQueue.push(send);
+					m_SendMutex.unlock();
+				}
+
+				delete recv;
+				continue;
+			}
+			m_ReceiveMutex.unlock();
+		}
 	}
 
 } // namespace sbla
