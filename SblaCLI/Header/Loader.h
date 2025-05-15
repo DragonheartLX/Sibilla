@@ -3,11 +3,11 @@
 #include <dylib.hpp>
 #include <string>
 
-#include "SblaInterface/Exports.h"
+#include "SblaInterface/Plugin.h"
 
 namespace sbla
 {
-	using DyLibInitFunc = void (*)(InitInfo*);
+	using DyLibInitFunc = void (*)(PluginInfo*);
 
 	class Loader
 	{

@@ -15,7 +15,7 @@ namespace sbla
 			return true;
 		};
 
-		static std::shared_ptr<T> getInstance()
+		static std::shared_ptr<T> Instance()
 		{
 			static std::once_flag s_Flag;
 			std::call_once(s_Flag, [&]() { s_Instance = std::shared_ptr<T>(new T); });

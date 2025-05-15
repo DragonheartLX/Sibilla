@@ -12,8 +12,7 @@ set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install")
 set(SBL_ROOT_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 
 add_subdirectory(SblaCore)
-add_subdirectory(SblaAdapter)
-add_subdirectory(SblaChatBot)
+add_subdirectory(SblaPlugin)
 add_subdirectory(SblaCLI)
 
 add_custom_target(SblaSandBox

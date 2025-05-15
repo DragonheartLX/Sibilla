@@ -214,7 +214,7 @@ namespace sbla
 		std::setlocale(LC_ALL, "en_US.UTF-8");
 #endif
 
-		while (GlobalInstance::getInstance()->isRunning)
+		while (GlobalInstance::Instance()->isRunning)
 		{
 			char inputChar = getInputChar();
 
@@ -260,7 +260,7 @@ namespace sbla
 	void Console::m_LoggerFunc()
 	{
 		m_CommandBufferUpdate();
-		while (GlobalInstance::getInstance()->isRunning)
+		while (GlobalInstance::Instance()->isRunning)
 		{
 			std::lock_guard<std::mutex> lock(m_ConsoleMutex);
 			if (!m_LogQueue.empty())
@@ -273,12 +273,12 @@ namespace sbla
 
 	void Console::m_CommandFunc()
 	{
-		while (GlobalInstance::getInstance()->isRunning)
+		while (GlobalInstance::Instance()->isRunning)
 		{
 			std::lock_guard<std::mutex> lock(m_CommandMutex);
 			if (!m_CommandQueue.empty())
 			{
-				if (m_CommandQueue.front() == "quit") GlobalInstance::getInstance()->isRunning = false;
+				if (m_CommandQueue.front() == "quit") GlobalInstance::Instance()->isRunning = false;
 				m_CommandQueue.pop();
 			}
 		}

@@ -53,5 +53,3 @@
 #else
 	#define SBL_API __attribute__((visibility("default")))
 #endif
-
-#define BIT(X) (1 << X)

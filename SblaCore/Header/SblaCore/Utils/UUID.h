@@ -14,7 +14,7 @@ namespace sbla
 		UUID(const UUID &) = default;
 
 		operator uint64_t() const { return m_UUID; }
-		std::string toString() const;
+		std::string toString(bool upperCase = true, bool withHyphens = true) const;
 
 	private:
 		uint64_t m_UUID;

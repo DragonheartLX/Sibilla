@@ -3,18 +3,18 @@
 #include <cstdint>
 #include <string>
 
-#include "EventData.h"
 #include "SblaCore/DataProtocol/Chatbot.h"
-#include "SblaCore/Macros.h"
 
 namespace sbla
 {
+	class EventData;
+
 	enum class EventType
 	{
-		Meta	= BIT(0),
-		Message = BIT(1),
-		Notice	= BIT(2),
-		Request = BIT(3)
+		Meta = 0,
+		Message,
+		Notice,
+		Request
 	};
 
 	struct Event

@@ -2,7 +2,6 @@
 #include <SblaCore/Utils/Singleton.h>
 #include <SblaInterface/ILogger.h>
 
-#include <atomic>
 #include <queue>
 #include <string>
 #include <thread>
@@ -18,37 +17,37 @@ namespace sbla
 		template <typename... Args>
 		static void fatal(std::format_string<Args...> fmt, Args&&... args)
 		{
-			getInstance()->log(LoggerLevel::fatal, std::format(fmt, std::forward<Args>(args)...));
+			Instance()->log(LoggerLevel::fatal, std::format(fmt, std::forward<Args>(args)...));
 		}
 
 		template <typename... Args>
 		static void error(std::format_string<Args...> fmt, Args&&... args)
 		{
-			getInstance()->log(LoggerLevel::error, std::format(fmt, std::forward<Args>(args)...));
+			Instance()->log(LoggerLevel::error, std::format(fmt, std::forward<Args>(args)...));
 		}
 
 		template <typename... Args>
 		static void warn(std::format_string<Args...> fmt, Args&&... args)
 		{
-			getInstance()->log(LoggerLevel::warn, std::format(fmt, std::forward<Args>(args)...));
+			Instance()->log(LoggerLevel::warn, std::format(fmt, std::forward<Args>(args)...));
 		}
 
 		template <typename... Args>
 		static void info(std::format_string<Args...> fmt, Args&&... args)
 		{
-			getInstance()->log(LoggerLevel::info, std::format(fmt, std::forward<Args>(args)...));
+			Instance()->log(LoggerLevel::info, std::format(fmt, std::forward<Args>(args)...));
 		}
 
 		template <typename... Args>
 		static void debug(std::format_string<Args...> fmt, Args&&... args)
 		{
-			getInstance()->log(LoggerLevel::debug, std::format(fmt, std::forward<Args>(args)...));
+			Instance()->log(LoggerLevel::debug, std::format(fmt, std::forward<Args>(args)...));
 		}
 
 		template <typename... Args>
 		static void trace(std::format_string<Args...> fmt, Args&&... args)
 		{
-			getInstance()->log(LoggerLevel::trace, std::format(fmt, std::forward<Args>(args)...));
+			Instance()->log(LoggerLevel::trace, std::format(fmt, std::forward<Args>(args)...));
 		}
 
 	private:
