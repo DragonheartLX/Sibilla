@@ -17,6 +17,13 @@ set_target_properties(SblaCore PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 target_include_directories(SblaCore PUBLIC Header)
 
+find_package(OpenSSL REQUIRED)
+    target_link_libraries(SblaCore PRIVATE OpenSSL::SSL)
+    target_link_libraries(SblaCore PRIVATE OpenSSL::Crypto)
+
+find_package(libhv CONFIG REQUIRED)
+    target_link_libraries(SblaCore PUBLIC hv_static)
+
 install(TARGETS SblaCore
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
     LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib

@@ -20,7 +20,7 @@ int main(int argc, char** argv)
 		return EXIT_FAILURE;
 	}
 
-	if (!sbla::SblaCLI::getInstance()->run())
+	if (!sbla::SblaCLI::Instance()->run())
 	{
 		sbla::Console::error("CLI run error!\n Exit.");
 		return EXIT_FAILURE;

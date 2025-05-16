@@ -17,7 +17,7 @@ namespace sbla
 		~Loader();
 
 		bool load();
-		void exec(InitInfo* info);
+		// void exec(InitInfo* info);
 		void exit();
 
 	private:

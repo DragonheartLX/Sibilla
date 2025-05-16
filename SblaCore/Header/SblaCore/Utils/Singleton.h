@@ -10,7 +10,7 @@ namespace sbla
 	public:
 		static bool init()
 		{
-			std::shared_ptr<T> ptr = getInstance();
+			std::shared_ptr<T> ptr = Instance();
 			if (ptr == nullptr) return false;
 			return true;
 		};

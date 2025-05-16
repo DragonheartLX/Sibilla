@@ -1,8 +1,6 @@
 #pragma once
 
 #include <SblaCore/Utils/Singleton.h>
-#include <SblaInterface/IAdapter.h>
-#include <SblaInterface/IChatBot.h>
 
 #include <map>
 #include <string>
@@ -17,8 +15,8 @@ namespace sbla
 		std::string adapter = "";
 		std::string chatBot = "";
 
-		IChatBot* cbPtr		= nullptr;
-		IAdapter* adaPtr	= nullptr;
+		// IChatBot* cbPtr		= nullptr;
+		// IAdapter* adaPtr	= nullptr;
 	};
 
 	class SblaCLI: public Singleton<SblaCLI>

@@ -1,6 +1,6 @@
 #include "Loader.h"
 
-#include <SblaInterface/Exports.h>
+// #include <SblaInterface/Exports.h>
 
 #include <dylib.hpp>
 
@@ -21,8 +21,8 @@ namespace sbla
 	{
 		try
 		{
-			m_Lib  = new dylib(m_Path, m_Name);
-			m_Func = m_Lib->get_function<void(InitInfo*)>("init");
+			m_Lib = new dylib(m_Path, m_Name);
+			// m_Func = m_Lib->get_function<void(InitInfo*)>("init");
 		}
 		catch (const dylib::load_error&)
 		{
@@ -37,9 +37,10 @@ namespace sbla
 
 		return true;
 	}
-	void Loader::exec(InitInfo* info)
-	{
-		info->logger = Console::getInstance().get();
-		m_Func(info);
-	}
+
+	// void Loader::exec(InitInfo* info)
+	// {
+	// 	info->logger = Console::getInstance().get();
+	// 	m_Func(info);
+	// }
 } // namespace sbla

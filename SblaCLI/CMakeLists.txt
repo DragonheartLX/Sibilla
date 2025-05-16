@@ -21,9 +21,6 @@ target_include_directories(SblaCLI PRIVATE Header)
 target_link_libraries(SblaCLI PRIVATE SblaCore)
 target_link_libraries(SblaCLI PRIVATE Threads::Threads)
 target_link_libraries(SblaCLI PRIVATE ${CMAKE_DL_LIBS})
-
-find_package(tomlplusplus CONFIG REQUIRED)
-    target_link_libraries(SblaCLI PRIVATE tomlplusplus::tomlplusplus)
     
 find_path(DYLIB_INCLUDE_DIRS "dylib.hpp")
     target_include_directories(SblaCLI PRIVATE ${DYLIB_INCLUDE_DIRS})
