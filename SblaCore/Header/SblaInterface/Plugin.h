@@ -9,11 +9,14 @@
 
 #include "SblaCore/DataProtocol/Action/Request.h"
 #include "SblaCore/DataProtocol/Event/Event.h"
+#include "SblaInterface/ILogger.h"
 
 namespace sbla
 {
 	struct PluginInfo
 	{
+		ILogger* logger;
+
 		std::string name;
 		std::string version;
 		std::string type;
@@ -27,13 +30,13 @@ namespace sbla
 	class IPlatform
 	{
 	public:
-		IPlatform()						= default;
-		virtual ~IPlatform()			= default;
+		IPlatform()							   = default;
+		virtual ~IPlatform()				   = default;
 
-		virtual void onInit()			= 0;
-		virtual void inLoop()			= 0;
-		virtual void send(Request* req) = 0;
-		virtual void onExit()			= 0;
+		virtual void onInit()				   = 0;
+		virtual void inLoop()				   = 0;
+		virtual void sendRequest(Request* req) = 0;
+		virtual void onExit()				   = 0;
 
 		void init();
 		void run();

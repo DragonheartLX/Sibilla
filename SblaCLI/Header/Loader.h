@@ -1,16 +1,19 @@
 #pragma once
 
+#include <SblaInterface/Plugin.h>
+
 #include <dylib.hpp>
 #include <string>
 
-#include "SblaInterface/Plugin.h"
-
 namespace sbla
 {
-	using DyLibInitFunc = void (*)(PluginInfo*);
 
 	class Loader
 	{
+		using LoadPluginFunc   = void (*)(PluginInfo*);
+		using LoadPlatformFunc = void (*)(std::string, IPlatform*);
+		using LoadChatbotFunc  = void (*)(std::string, IChatbot*);
+
 	public:
 		Loader();
 		Loader(const std::string& path, const std::string& name);
@@ -25,6 +28,10 @@ namespace sbla
 		std::string m_Name;
 
 		dylib* m_Lib;
-		DyLibInitFunc m_Func;
+		PluginInfo* m_Info;
+
+		LoadPluginFunc m_PluginFunc;
+		LoadPlatformFunc m_PlatformFunc;
+		LoadChatbotFunc m_ChatbotFunc;
 	};
 } // namespace sbla

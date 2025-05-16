@@ -1,8 +1,7 @@
 #include "SblaCore/Utils/UUID.h"
 
-#include <algorithm>
-#include <cctype>
 #include <iomanip>
+#include <ios>
 #include <random>
 #include <sstream>
 
@@ -18,22 +17,13 @@ namespace sbla
 	std::string UUID::toString(bool upperCase, bool withHyphens) const
 	{
 		std::ostringstream oss;
-		oss << std::hex << std::setfill('0') << std::setw(16) << m_UUID;
+		oss << std::hex << (upperCase ? std::uppercase : std::nouppercase) << std::setfill('0') << std::setw(16) << m_UUID;
 		std::string formatUUID = oss.str();
-
-		if (upperCase)
-			std::transform(formatUUID.begin(), formatUUID.end(), formatUUID.begin(), std::toupper);
-		else
-			std::transform(formatUUID.begin(), formatUUID.end(), formatUUID.begin(), std::tolower);
 
 		// XXXX XXXX XXXX XXXX
 		// XXXX-XXXX-XXXX-XXXX
 		if (withHyphens)
-		{
-			formatUUID.insert(4, "-");
-			formatUUID.insert(9, "-");
-			formatUUID.insert(14, "-");
-		}
+			for (int i = 0; i < 3; i++) formatUUID.insert(5 * i + 4, "-");
 
 		return formatUUID;
 	}

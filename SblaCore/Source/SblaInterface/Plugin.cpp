@@ -53,7 +53,7 @@ namespace sbla
 				m_EventMutex.unlock();
 
 				Request* req = new Request;
-				if (m_EventProcessCallBack(event, req)) send(req);
+				if (m_EventProcessCallBack(event, req)) sendRequest(req);
 
 				delete req;
 			}

@@ -7,6 +7,12 @@
  * 
  */
 
+#include <SblaCore/Macros.h>
+#include <SblaInterface/ILogger.h>
+#include <SblaInterface/Plugin.h>
+
+#include <string>
+
 #define SBLA_PLUGIN_NAME "SblaPlugin"
 #define SBLA_PLUGIN_VERSION "0.0.0-Dev"
 #define SBLA_PLUGIN_TYPE "ALL"
@@ -14,21 +20,18 @@
 #define SBLA_PLATFORM
 #define SBLA_CHATBOT
 
-#include <SblaCore/Macros.h>
-#include <SblaInterface/Plugin.h>
-
-#include <string>
-
 using namespace sbla;
+
+static ILogger* logger = nullptr;
 
 void initPlugin(PluginInfo* info);
 
 #ifdef SBLA_PLATFORM
-void loadPlatForm(std::string name, IPlatform* platform);
+SBL_API void loadPlatForm(std::string name, IPlatform* platform);
 #endif
 
 #ifdef SBLA_CHATBOT
-void loadChatbot(std::string name, IChatbot* chatbot);
+SBL_API void loadChatbot(std::string name, IChatbot* chatbot);
 #endif
 
 #ifdef SBL_BUILD_SHARED
@@ -36,8 +39,9 @@ void loadChatbot(std::string name, IChatbot* chatbot);
 extern "C"
 {
 	#endif
-	inline void loadPlugin(PluginInfo* info)
+	SBL_API inline void loadPlugin(PluginInfo* info)
 	{
+		logger		  = info->logger;
 		info->name	  = SBLA_PLUGIN_NAME;
 		info->version = SBLA_PLUGIN_VERSION;
 		info->type	  = SBLA_PLUGIN_TYPE;
