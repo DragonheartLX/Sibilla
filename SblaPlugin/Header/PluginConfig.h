@@ -26,19 +26,20 @@ static ILogger* logger = nullptr;
 
 void initPlugin(PluginInfo* info);
 
-#ifdef SBLA_PLATFORM
-SBL_API void loadPlatForm(std::string name, IPlatform* platform);
-#endif
-
-#ifdef SBLA_CHATBOT
-SBL_API void loadChatbot(std::string name, IChatbot* chatbot);
-#endif
-
 #ifdef SBL_BUILD_SHARED
 	#ifdef __cplusplus
 extern "C"
 {
 	#endif
+
+	#ifdef SBLA_PLATFORM
+	SBL_API void loadPlatForm(std::string name, IPlatform* platform);
+	#endif
+
+	#ifdef SBLA_CHATBOT
+	SBL_API void loadChatbot(std::string name, IChatbot* chatbot);
+	#endif
+
 	SBL_API inline void loadPlugin(PluginInfo* info)
 	{
 		logger		  = info->logger;

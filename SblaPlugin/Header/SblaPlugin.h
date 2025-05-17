@@ -6,7 +6,7 @@ class OneBot: public sbla::IPlatform
 public:
 	virtual void onInit() {};
 	virtual void inLoop() {};
-	virtual void send(sbla::Request* req) {};
+	virtual void sendRequest(sbla::Request* req) {};
 	virtual void onExit() {};
 };
 

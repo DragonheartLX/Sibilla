@@ -24,14 +24,14 @@ namespace sbla
 			m_Lib		 = new dylib(m_Path, m_Name, dylib::no_filename_decorations);
 			m_PluginFunc = m_Lib->get_function<void(PluginInfo*)>("loadPlugin");
 		}
-		catch (const dylib::load_error&)
+		catch (const dylib::load_error& e)
 		{
-			Console::warn("Load {0} error, skip.", m_Name);
+			Console::warn("Load {0} error, skip.\nError: {1}", m_Name, e.what());
 			return false;
 		}
-		catch (const dylib::symbol_error&)
+		catch (const dylib::symbol_error& e)
 		{
-			Console::warn("Get {0} loadPlugin symbol error, skip.", m_Name);
+			Console::warn("Get {0} loadPlugin symbol error, skip.\nError: {1}", m_Name, e.what());
 			return false;
 		}
 
@@ -48,9 +48,9 @@ namespace sbla
 			else
 				Console::warn("Unknow plugin type: {0} in {1}, skip.", m_Info->type, m_Name);
 		}
-		catch (const dylib::symbol_error&)
+		catch (const dylib::symbol_error& e)
 		{
-			Console::warn("Get {0} createPlugin symbol error, skip.", m_Name);
+			Console::warn("Get {0} createPlugin symbol error, skip.\nError: {1}", m_Name, e.what());
 			return false;
 		}
 
@@ -62,4 +62,6 @@ namespace sbla
 	// 	info->logger = Console::getInstance().get();
 	// 	m_Func(info);
 	// }
+
+	PluginInfo* Loader::getInfo() { return m_Info; }
 } // namespace sbla

@@ -1,7 +1,8 @@
 #pragma once
 
+#include <hv/iniparser.h>
+
 #include <map>
-#include <optional>
 #include <string>
 
 namespace sbla
@@ -9,12 +10,19 @@ namespace sbla
 	class Config
 	{
 	public:
-		Config();
+		Config(IniParser& ini, std::string section = "");
 		~Config();
 
-		std::optional<std::string> operator[](const std::string& key);
+		template <typename T>
+		T value_or(std::string& key, T& val)
+		{
+			if (m_Config.find(key) == m_Config.end())
+				return val;
+			else
+				return dynamic_cast<T>(m_Config[key]);
+		}
 
-		std::string name;
-		std::map<std::string, std::string> content;
+	private:
+		std::map<std::string, std::string> m_Config;
 	};
 } // namespace sbla

@@ -5,17 +5,11 @@
 
 namespace sbla
 {
-	Config::Config()
+	Config::Config(IniParser& ini, std::string section)
 	{
-		name = "NULL";
-		content.clear();
+		std::list<std::string> keys = ini.GetKeys(section);
+		for (std::string& key : keys) m_Config[key] = ini.GetValue(key, section);
 	}
 
-	Config::~Config() { content.clear(); }
-
-	std::optional<std::string> Config::operator[](const std::string& key)
-	{
-		if (content.find(key) == content.end()) return std::nullopt;
-		return content[key];
-	}
+	Config::~Config() {}
 } // namespace sbla

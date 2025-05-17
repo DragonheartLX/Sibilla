@@ -7,6 +7,7 @@ void initPlugin(PluginInfo* info)
 {
 	info->platform.push_back("Onebot V11");
 	info->chatbot.push_back("Liz Brucstine");
+	logger->info("SblaPlugin init.");
 }
 
 void loadPlatForm(std::string name, IPlatform* platform)

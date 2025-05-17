@@ -23,6 +23,8 @@ namespace sbla
 		// void exec(InitInfo* info);
 		void exit();
 
+		PluginInfo* getInfo();
+
 	private:
 		std::string m_Path;
 		std::string m_Name;
