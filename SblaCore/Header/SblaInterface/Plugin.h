@@ -53,8 +53,7 @@ namespace sbla
 
 		std::atomic<bool> m_Running;
 
-		// error use std::mutex
-		std::recursive_mutex m_EventMutex;
+		std::mutex m_EventMutex;
 		std::queue<Event*> m_EventQueue;
 
 		ChatbotCallBack m_EventProcessCallBack;

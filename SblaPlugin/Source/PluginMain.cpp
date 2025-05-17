@@ -12,7 +12,7 @@ void initPlugin(PluginInfo* info)
 
 IPlatform* loadPlatForm(std::string name, Config* config)
 {
-	if (name == "Onebot V11") return new OneBot;
+	if (name == "Onebot V11") return new OneBot(config->value_or("ws_url", ""), config->value_or("ws_token", ""));
 	return nullptr;
 }
 

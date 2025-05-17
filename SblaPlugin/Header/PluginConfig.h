@@ -12,8 +12,6 @@
 #include <SblaInterface/ILogger.h>
 #include <SblaInterface/Plugin.h>
 
-#include <string>
-
 #define SBLA_PLUGIN_NAME "SblaPlugin"
 #define SBLA_PLUGIN_VERSION "0.0.0-Dev"
 #define SBLA_PLUGIN_TYPE "ALL"
@@ -23,7 +21,7 @@
 
 using namespace sbla;
 
-static ILogger* logger = nullptr;
+extern ILogger* logger;
 
 void initPlugin(PluginInfo* info);
 
@@ -41,14 +39,7 @@ extern "C"
 	SBL_API IChatbot* loadChatbot(std::string name, Config* config);
 	#endif
 
-	SBL_API inline void loadPlugin(PluginInfo* info)
-	{
-		logger		  = info->logger;
-		info->name	  = SBLA_PLUGIN_NAME;
-		info->version = SBLA_PLUGIN_VERSION;
-		info->type	  = SBLA_PLUGIN_TYPE;
-		initPlugin(info);
-	};
+	SBL_API inline void loadPlugin(PluginInfo* info);
 
 	#ifdef __cplusplus
 }

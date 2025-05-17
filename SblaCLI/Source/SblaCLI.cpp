@@ -77,6 +77,8 @@ namespace sbla
 
 				if (info->type == "Chatbot" || info->type == "ALL")
 					for (const std::string& val : info->chatbot) m_Chatbots.insert(std::make_pair(val, lib));
+
+				Console::info("Loaded Plugin: {0}, Version: {1}, Type: {2}", info->name, info->version, info->type);
 			}
 		}
 
@@ -180,6 +182,7 @@ namespace sbla
 			}
 
 			m_Inst.push_back(inst);
+			Console::info("Chatbot {0} loaded with Platform {1}.", chatbotPluginName, platformPluginName);
 			inst.platform->bindCallBack(std::bind(&IChatbot::onEvent, inst.chatbot, std::placeholders::_1, std::placeholders::_2));
 
 			inst.platform->init();

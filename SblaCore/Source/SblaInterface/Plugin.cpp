@@ -1,5 +1,6 @@
 #include "SblaInterface/Plugin.h"
 
+#include <mutex>
 #include <thread>
 
 #include "SblaCore/DataProtocol/Action/Request.h"
@@ -45,18 +46,20 @@ namespace sbla
 	{
 		while (isRunning())
 		{
-			m_EventMutex.lock();
+			std::unique_lock<std::mutex> lock(m_EventMutex);
+
 			if (!m_EventQueue.empty())
 			{
 				Event* event = m_EventQueue.front();
 				m_EventQueue.pop();
-				m_EventMutex.unlock();
+				lock.unlock();
 
 				Request* req = new Request;
 				if (m_EventProcessCallBack(event, req)) sendRequest(req);
 
 				delete req;
 			}
+			lock.unlock();
 		}
 	}
 } // namespace sbla
