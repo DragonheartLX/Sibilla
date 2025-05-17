@@ -7,6 +7,7 @@
  * 
  */
 
+#include <SblaCore/Config.h>
 #include <SblaCore/Macros.h>
 #include <SblaInterface/ILogger.h>
 #include <SblaInterface/Plugin.h>
@@ -33,11 +34,11 @@ extern "C"
 	#endif
 
 	#ifdef SBLA_PLATFORM
-	SBL_API void loadPlatForm(std::string name, IPlatform* platform);
+	SBL_API IPlatform* loadPlatForm(std::string name, Config* config);
 	#endif
 
 	#ifdef SBLA_CHATBOT
-	SBL_API void loadChatbot(std::string name, IChatbot* chatbot);
+	SBL_API IChatbot* loadChatbot(std::string name, Config* config);
 	#endif
 
 	SBL_API inline void loadPlugin(PluginInfo* info)
@@ -48,6 +49,7 @@ extern "C"
 		info->type	  = SBLA_PLUGIN_TYPE;
 		initPlugin(info);
 	};
+
 	#ifdef __cplusplus
 }
 	#endif

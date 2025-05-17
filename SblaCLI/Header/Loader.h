@@ -1,5 +1,6 @@
 #pragma once
 
+#include <SblaCore/Config.h>
 #include <SblaInterface/Plugin.h>
 
 #include <dylib.hpp>
@@ -11,8 +12,8 @@ namespace sbla
 	class Loader
 	{
 		using LoadPluginFunc   = void (*)(PluginInfo*);
-		using LoadPlatformFunc = void (*)(std::string, IPlatform*);
-		using LoadChatbotFunc  = void (*)(std::string, IChatbot*);
+		using LoadPlatformFunc = IPlatform* (*)(std::string, Config*);
+		using LoadChatbotFunc  = IChatbot* (*)(std::string, Config*);
 
 	public:
 		Loader();
@@ -20,7 +21,8 @@ namespace sbla
 		~Loader();
 
 		bool load();
-		// void exec(InitInfo* info);
+		IPlatform* createPlatform(const std::string& name, Config config);
+		IChatbot* createChatbot(const std::string& name, Config config);
 		void exit();
 
 		PluginInfo* getInfo();

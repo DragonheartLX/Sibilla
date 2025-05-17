@@ -42,11 +42,16 @@ namespace sbla
 		try
 		{
 			if (m_Info->type == "Platform" || m_Info->type == "ALL")
-				m_PlatformFunc = m_Lib->get_function<void(std::string, IPlatform*)>("loadPlatForm");
-			else if (m_Info->type == "Chatbot" || m_Info->type == "ALL")
-				m_ChatbotFunc = m_Lib->get_function<void(std::string, IChatbot*)>("loadChatbot");
-			else
+				m_PlatformFunc = m_Lib->get_function<IPlatform*(std::string, Config*)>("loadPlatForm");
+
+			if (m_Info->type == "Chatbot" || m_Info->type == "ALL")
+				m_ChatbotFunc = m_Lib->get_function<IChatbot*(std::string, Config*)>("loadChatbot");
+
+			if (m_Info->type != "Platform" && m_Info->type != "Chatbot" && m_Info->type != "ALL")
+			{
 				Console::warn("Unknow plugin type: {0} in {1}, skip.", m_Info->type, m_Name);
+				return false;
+			}
 		}
 		catch (const dylib::symbol_error& e)
 		{
@@ -57,11 +62,19 @@ namespace sbla
 		return true;
 	}
 
-	// void Loader::exec(InitInfo* info)
-	// {
-	// 	info->logger = Console::getInstance().get();
-	// 	m_Func(info);
-	// }
+	IPlatform* Loader::createPlatform(const std::string& name, Config config)
+	{
+		IPlatform* ptr = nullptr;
+		ptr			   = m_PlatformFunc(name, &config);
+		return ptr;
+	}
+
+	IChatbot* Loader::createChatbot(const std::string& name, Config config)
+	{
+		IChatbot* ptr = nullptr;
+		ptr			  = m_ChatbotFunc(name, &config);
+		return ptr;
+	}
 
 	PluginInfo* Loader::getInfo() { return m_Info; }
 } // namespace sbla

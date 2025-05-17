@@ -6,7 +6,7 @@ build/
 
 # Sibilla
 SblaSandBox/*
-!SblaSandBox/ConfigTemplate.cfg
+!SblaSandBox/ConfigTemplate.conf
 
 # Clangd
 .cache/

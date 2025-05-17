@@ -13,13 +13,12 @@ namespace sbla
 		Config(IniParser& ini, std::string section = "");
 		~Config();
 
-		template <typename T>
-		T value_or(std::string& key, T& val)
+		std::string& value_or(const std::string& key, std::string&& val)
 		{
 			if (m_Config.find(key) == m_Config.end())
 				return val;
 			else
-				return dynamic_cast<T>(m_Config[key]);
+				return m_Config[key];
 		}
 
 	private:

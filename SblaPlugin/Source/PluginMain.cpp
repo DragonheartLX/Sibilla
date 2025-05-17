@@ -10,12 +10,14 @@ void initPlugin(PluginInfo* info)
 	logger->info("SblaPlugin init.");
 }
 
-void loadPlatForm(std::string name, IPlatform* platform)
+IPlatform* loadPlatForm(std::string name, Config* config)
 {
-	if (name == "Onebot V11") platform = new OneBot;
+	if (name == "Onebot V11") return new OneBot;
+	return nullptr;
 }
 
-void loadChatbot(std::string name, IChatbot* chatbot)
+IChatbot* loadChatbot(std::string name, Config* config)
 {
-	if (name == "Liz Brucstine") chatbot = new Liz;
+	if (name == "Liz Brucstine") return new Liz;
+	return nullptr;
 }

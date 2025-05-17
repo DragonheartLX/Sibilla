@@ -53,7 +53,8 @@ namespace sbla
 
 		std::atomic<bool> m_Running;
 
-		std::mutex m_EventMutex;
+		// error use std::mutex
+		std::recursive_mutex m_EventMutex;
 		std::queue<Event*> m_EventQueue;
 
 		ChatbotCallBack m_EventProcessCallBack;
@@ -66,7 +67,7 @@ namespace sbla
 	{
 	public:
 		IChatbot()										 = default;
-		~IChatbot()										 = default;
+		virtual ~IChatbot()								 = default;
 
 		virtual void onInit()							 = 0;
 		virtual void onExit()							 = 0;

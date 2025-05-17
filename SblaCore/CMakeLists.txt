@@ -18,8 +18,8 @@ set_target_properties(SblaCore PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_include_directories(SblaCore PUBLIC Header)
 
 find_package(OpenSSL REQUIRED)
-    target_link_libraries(SblaCore PRIVATE OpenSSL::SSL)
-    target_link_libraries(SblaCore PRIVATE OpenSSL::Crypto)
+    target_link_libraries(SblaCore PUBLIC OpenSSL::SSL)
+    target_link_libraries(SblaCore PUBLIC OpenSSL::Crypto)
 
 find_package(libhv CONFIG REQUIRED)
     target_link_libraries(SblaCore PUBLIC hv_static)

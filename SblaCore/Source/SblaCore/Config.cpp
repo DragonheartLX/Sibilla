@@ -1,6 +1,5 @@
 #include "SblaCore/Config.h"
 
-#include <optional>
 #include <string>
 
 namespace sbla
